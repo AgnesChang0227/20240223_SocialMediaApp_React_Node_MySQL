@@ -58,5 +58,11 @@ export const login = (req, res) => {
 };
 
 export const logout = (req, res) => {
-  if (err) return res.status(500).json(err);
+  res.clearCookie({
+    secure:true,
+    sameSite:"none",//如果端口不一樣，默認會禁止清理cookie
+  })
+    .status(200)
+    .json("User has been logout");
+//  client side 可以check cookie 在不在去判定login/logout
 };
