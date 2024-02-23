@@ -8,6 +8,8 @@ import likeRoutes from "./routes/likes.js"
 import commentRoutes from "./routes/comments.js"
 import postRoutes from "./routes/posts.js"
 
+//middleware
+app.use(express.json())
 
 //routes
 app.use("/api/users",userRoutes);
