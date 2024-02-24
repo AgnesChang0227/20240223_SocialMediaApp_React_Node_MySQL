@@ -41,7 +41,7 @@ export const login = (req, res) => {
 
     const checkPassword = bcrypt.compareSync(req.body.password, data[0].password);
     if (!checkPassword) return res.status(400).json("Wrong password or username");
-    const token = jwt.sign({id: data[0].id}, "secretkey");
+    const token = jwt.sign({id: data[0].id}, "secretKey");
 
     //separate password from user info
     const {password, ...others} = data[0]

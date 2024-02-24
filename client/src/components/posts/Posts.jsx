@@ -13,10 +13,9 @@ const Posts = () => {
           .then(res => res.data)
     })
 
-
   return <div className="posts">
     {error ?
-      "Something went wrong!" :
+      error.response.data :
       isPending ?
         "loading" :
         data.map(post => <Post post={post} key={post.id}/>)
