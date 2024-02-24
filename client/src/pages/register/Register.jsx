@@ -1,9 +1,8 @@
 import {Link} from "react-router-dom";
 import {useState} from "react";
-import axios from "axios";
 
 import "./register.scss";
-import {registerRoute, route} from "../../routes/auth";
+import {makeRequest} from "../../axios";
 
 const Register = () => {
   const [inputs, setInputs] = useState({
@@ -22,7 +21,7 @@ const Register = () => {
     e.preventDefault();//don't refresh the page
 
     try {
-      await axios.post(route("/auth/register"),inputs)
+      await makeRequest.post("/auth/register",inputs)
     } catch (err) {
       // console.log(err)
       setErr(err.response.data);

@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios";
-import {route} from "../routes/auth";
+import {makeRequest} from "../axios";
 
 export const AuthContext = createContext();
 
@@ -15,10 +14,7 @@ export const AuthContextProvider = ({ children }) => {
 
   const login = async (inputs) => {
     try {
-      const res = await axios.post(route("/auth/login"), inputs, {
-        //using cookie
-        withCredentials: true
-      });
+      const res = await makeRequest.post("/auth/login",inputs);
       setCurrentUser(res.data)
     }catch (err){
       return err;
