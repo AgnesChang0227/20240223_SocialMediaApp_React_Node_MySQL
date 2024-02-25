@@ -30,8 +30,6 @@ export const getPost = (req, res) => {
       return res.status(200).json(data);
     })
   })
-
-
 }
 
 export const addPost = (req,res)=>{

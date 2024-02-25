@@ -29,7 +29,6 @@ const Share = () => {
       //send object to backend
       const formData = new FormData();
       formData.append("file", file);
-      console.log(formData);
       const res = await makeRequest.post("/upload", formData);
       return res.data
     } catch (err) {
