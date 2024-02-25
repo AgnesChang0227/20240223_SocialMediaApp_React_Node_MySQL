@@ -19,7 +19,6 @@ export const getComments = (req, res) => {
 }
 
 export const addComments = (req, res) => {
-  console.log(req.body)
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Please login first");
 
