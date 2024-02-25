@@ -9,64 +9,124 @@ import LanguageIcon from "@mui/icons-material/Language";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts"
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {makeRequest} from "../../axios";
+import {useLocation, useParams} from "react-router-dom";
+import {useContext} from "react";
+import {AuthContext} from "../../context/authContext";
 
 const Profile = () => {
+  const {currentUser} = useContext(AuthContext);
+  let {userId} =useParams();
+  userId = parseInt(userId)
+  //fetch target user info
+  const {isPending, error, data} =
+    useQuery({
+      queryKey: ['user'],
+      queryFn: () =>
+        makeRequest.get("/users/find/" + userId)
+          .then(res => res.data)
+    })
+  //fetch target user's follower
+  const {isPending: rIsPending, data: relationshipData} =
+    useQuery({
+      queryKey: ['relationship'],
+      queryFn: () =>
+        makeRequest.get("/relationships?followedUserId=" + userId)
+          .then(res => res.data)
+    })
+
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (following) => {
+      if (following) return makeRequest.delete("/relationships?userId=" + userId);
+      return makeRequest.post("/relationships", {userId});
+    },
+    onSuccess: () => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({queryKey: ["relationship"]})
+    },
+  })
+
+
+  const handleFollow = (e) => {
+    e.preventDefault();
+    //current user is follower or not
+    mutation.mutate(relationshipData.includes(currentUser.id));
+
+  }
+
   return (
     <div className="profile">
-      <div className="images">
-        <img
-          src="https://images.pexels.com/photos/13440765/pexels-photo-13440765.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-          alt=""
-          className="cover"
-        />
-        <img
-          src="https://images.pexels.com/photos/14028501/pexels-photo-14028501.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load"
-          alt=""
-          className="profilePic"
-        />
-      </div>
-      <div className="profileContainer">
-        <div className="uInfo">
-          <div className="left">
-            <a href="http://facebook.com">
-              <FacebookTwoToneIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <InstagramIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <TwitterIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <LinkedInIcon fontSize="large" />
-            </a>
-            <a href="http://facebook.com">
-              <PinterestIcon fontSize="large" />
-            </a>
+      {isPending ?
+        "Loading" :
+        <>
+          <div className="images">
+            <img
+              src={data.coverPic}
+              alt=""
+              className="cover"
+            />
+            <img
+              src={data.profilePic}
+              alt=""
+              className="profilePic"
+            />
           </div>
-          <div className="center">
-            <span>Jane Doe</span>
-            <div className="info">
-              <div className="item">
-                <PlaceIcon />
-                <span>USA</span>
+          <div className="profileContainer">
+            <div className="uInfo">
+              <div className="left">
+                <a href="http://facebook.com">
+                  <FacebookTwoToneIcon fontSize="large"/>
+                </a>
+                <a href="http://facebook.com">
+                  <InstagramIcon fontSize="large"/>
+                </a>
+                <a href="http://facebook.com">
+                  <TwitterIcon fontSize="large"/>
+                </a>
+                <a href="http://facebook.com">
+                  <LinkedInIcon fontSize="large"/>
+                </a>
+                <a href="http://facebook.com">
+                  <PinterestIcon fontSize="large"/>
+                </a>
               </div>
-              <div className="item">
-                <LanguageIcon />
-                <span>lama.dev</span>
+              <div className="center">
+                <span>{data.name}</span>
+                <div className="info">
+                  <div className="item">
+                    <PlaceIcon/>
+                    <span>{data.city}</span>
+                  </div>
+                  <div className="item">
+                    <LanguageIcon/>
+                    <span>{data.website}</span>
+                  </div>
+                </div>
+                {currentUser.id === userId ?
+                  <button>update</button>
+                  :
+                  <button onClick={handleFollow}>
+                    {rIsPending ?
+                      "Loading" :
+                      relationshipData.includes(currentUser.id)
+                        ? "Following"
+                        : "Follow"}
+                  </button>
+                }
+              </div>
+              <div className="right">
+                <EmailOutlinedIcon/>
+                <MoreVertIcon/>
               </div>
             </div>
-            <button>follow</button>
+            <Posts userId={userId}/>
           </div>
-          <div className="right">
-            <EmailOutlinedIcon />
-            <MoreVertIcon />
-          </div>
-        </div>
-      <Posts/>
-      </div>
+        </>
+      }
     </div>
-  );
+  )
 };
 
 export default Profile;

@@ -26,7 +26,7 @@ export const addLikes = (req, res) => {
     ]
 
     db.query(q,[values], (err, data) => {
-      if (err) res.status(500).json(err);
+      if (err) return  res.status(500).json(err);
       return res.status(200).json("Post has been liked");
     })
   })

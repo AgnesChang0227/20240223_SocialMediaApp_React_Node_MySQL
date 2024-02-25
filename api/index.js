@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.js"
 import likeRoutes from "./routes/likes.js"
 import commentRoutes from "./routes/comments.js"
 import postRoutes from "./routes/posts.js"
+import relationshipRoutes from "./routes/relationship.js"
 import multer from "multer";
 
 
@@ -47,6 +48,7 @@ app.use("/api/auth",authRoutes);
 app.use("/api/comments",commentRoutes);
 app.use("/api/likes",likeRoutes);
 app.use("/api/posts",postRoutes);
+app.use("/api/relationships",relationshipRoutes);
 
 
 //port

@@ -47,7 +47,7 @@ export const login = (req, res) => {
     const {password, ...others} = data[0]
 
     //return
-    res.cookie("accessToken", token,
+    return res.cookie("accessToken", token,
       {
         httpOnly: true,
       })
@@ -58,7 +58,7 @@ export const login = (req, res) => {
 };
 
 export const logout = (req, res) => {
-  res.clearCookie({
+  return res.clearCookie({
     secure:true,
     sameSite:"none",//如果端口不一樣，默認會禁止清理cookie
   })

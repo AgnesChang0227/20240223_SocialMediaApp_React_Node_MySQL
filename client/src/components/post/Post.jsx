@@ -4,7 +4,7 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Comments from "../comments/Comments";
 import {useContext, useState} from "react";
 import moment from "moment";
@@ -13,21 +13,21 @@ import {makeRequest} from "../../axios";
 import {AuthContext} from "../../context/authContext";
 
 const Post = ({post}) => {
+  const navigate = useNavigate();
   const [commentOpen, setCommentOpen] = useState(false);
   const {currentUser} = useContext(AuthContext);
   //fetch comments
   const {isPending, error, data} =
     useQuery({
-      queryKey: ['likes', post.id],
+      queryKey: ['likes',post.id],
       queryFn: () =>
         makeRequest.get("/likes?postId=" + post.id)
           .then(res => res.data)
     })
-
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: (liked) => {
-      if (liked) makeRequest.delete("/likes?postId=" + post.id);
+      if (liked) return makeRequest.delete("/likes?postId=" + post.id);
       return makeRequest.post("/likes", {postId:post.id});
     },
     onSuccess: () => {
@@ -49,12 +49,16 @@ const Post = ({post}) => {
           <div className="userInfo">
             <img src={post.profilePic} alt=""/>
             <div className="details">
-              <Link
-                to={`/profile/${post.userId}`}
-                style={{textDecoration: "none", color: "inherit"}}
-              >
-                <span className="name">{post.name}</span>
-              </Link>
+              {/*<Link*/}
+              {/*  to={`/profile/${post.userId}`}*/}
+              {/*  // onClick={()=>navigate(`/profile/${post.userId}`)}*/}
+              {/*  style={{textDecoration: "none", color: "inherit"}}*/}
+              {/*>*/}
+                <a href={`/profile/${post.userId}`}
+                   style={{textDecoration: "none", color: "inherit"}}>
+                  <span className="name">{post.name}</span>
+                </a>
+              {/*</Link>*/}
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
           </div>
@@ -71,7 +75,7 @@ const Post = ({post}) => {
               : data.includes(currentUser.id) ?
                 <FavoriteOutlinedIcon style={{color: "red"}} onClick={handleLike}/>
                 : <FavoriteBorderOutlinedIcon onClick={handleLike}/>}
-            {data.length} Likes
+            {data&&data.length} Likes
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon/>
