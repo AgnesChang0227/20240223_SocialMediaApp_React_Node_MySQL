@@ -12,20 +12,36 @@ import Posts from "../../components/posts/Posts"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {makeRequest} from "../../axios";
 import {useLocation, useParams} from "react-router-dom";
-import {useContext} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/authContext";
+import Update from "../../components/update/Update";
 
 const Profile = () => {
-  const {currentUser} = useContext(AuthContext);
-  let {userId} =useParams();
-  userId = parseInt(userId)
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const {currentUser,setCurrentUser} = useContext(AuthContext);
+
+  let {userId} = useParams();
+  userId = parseInt(userId);
+
   //fetch target user info
   const {isPending, error, data} =
     useQuery({
       queryKey: ['user'],
       queryFn: () =>
         makeRequest.get("/users/find/" + userId)
-          .then(res => res.data)
+          .then(res =>  {
+            //check if user info is not latest
+            if (currentUser.id===res.data.id){
+              for (const key in res.data) {
+                if (currentUser[key]!==res.data[key]) {
+                  //update user info
+                  setCurrentUser(res.data);
+                  break;
+                }
+              }
+            }
+            return res.data
+          })
     })
   //fetch target user's follower
   const {isPending: rIsPending, data: relationshipData} =
@@ -63,12 +79,12 @@ const Profile = () => {
         <>
           <div className="images">
             <img
-              src={data.coverPic}
+              src={"/upload/" + data.coverPic}
               alt=""
               className="cover"
             />
             <img
-              src={data.profilePic}
+              src={"/upload/" + data.profilePic}
               alt=""
               className="profilePic"
             />
@@ -105,7 +121,9 @@ const Profile = () => {
                   </div>
                 </div>
                 {currentUser.id === userId ?
-                  <button>update</button>
+                  <button onClick={() => setOpenUpdate(true)}>
+                    Update
+                  </button>
                   :
                   <button onClick={handleFollow}>
                     {rIsPending ?
@@ -125,6 +143,10 @@ const Profile = () => {
           </div>
         </>
       }
+      {openUpdate &&
+        <Update setOpenUpdate={setOpenUpdate} user={data}/>
+      }
+
     </div>
   )
 };

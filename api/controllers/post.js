@@ -15,7 +15,7 @@ export const getPost = (req, res) => {
     //WHERE OR ：作為follower 或者作為post的owner
 
     const userId = req.query.userId;
-    const q = userId
+    const q =( userId&&userId!=="undefined")
       ////all target user 的post
       ? `SELECT p.*, u.id AS userId, name, profilePic
          FROM posts AS p
