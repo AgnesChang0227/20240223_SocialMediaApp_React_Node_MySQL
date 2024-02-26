@@ -65,3 +65,21 @@ export const addPost = (req, res) => {
   })
 
 }
+
+export const deletePost = (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Please login first");
+
+  jwt.verify(token, "secretKey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const q = "DELETE FROM posts WHERE `userId`=? AND `id`=?"
+
+    db.query(q, [userInfo.id,req.params.id], (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (!data.affectedRows) return res.status(403).json("You can delete only your posts");
+      return res.status(200).json("Post has been deleted");
+    })
+  })
+
+}
