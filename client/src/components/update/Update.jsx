@@ -2,10 +2,8 @@ import React, {useContext, useState} from 'react';
 import "./update.scss"
 import {makeRequest} from "../../axios";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {AuthContext} from "../../context/authContext";
 
 const Update = ({setOpenUpdate,user}) => {
-  const {setCurrentUser} = useContext(AuthContext)
   const [cover,setCover] = useState(null)
   const [profile,setProfile] = useState(null)
   const [texts,setTexts] =useState({

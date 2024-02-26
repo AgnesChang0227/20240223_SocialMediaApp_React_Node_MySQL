@@ -49,16 +49,12 @@ const Post = ({post}) => {
           <div className="userInfo">
             <img src={"/upload/"+post.profilePic} alt=""/>
             <div className="details">
-              {/*<Link*/}
-              {/*  to={`/profile/${post.userId}`}*/}
-              {/*  // onClick={()=>navigate(`/profile/${post.userId}`)}*/}
-              {/*  style={{textDecoration: "none", color: "inherit"}}*/}
-              {/*>*/}
-                <a href={`/profile/${post.userId}`}
-                   style={{textDecoration: "none", color: "inherit"}}>
+              <Link
+                to={`/profile/${post.userId}`}
+                style={{textDecoration: "none", color: "inherit"}}
+              >
                   <span className="name">{post.name}</span>
-                </a>
-              {/*</Link>*/}
+              </Link>
               <span className="date">{moment(post.createdAt).fromNow()}</span>
             </div>
           </div>
