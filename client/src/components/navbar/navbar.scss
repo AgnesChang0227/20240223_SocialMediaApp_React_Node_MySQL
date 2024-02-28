@@ -17,11 +17,18 @@
     .left {
       display: flex;
       align-items: center;
-      gap: 30px;
+      gap: 50px;
+      padding-left: 30px;
 
       span {
         font-weight: bold;
         font-size: 20px;
+        color: themed("logo");
+      }
+
+      .icon{
+        display: flex;
+        align-items: center;
         color: themed("logo");
       }
 
@@ -53,7 +60,8 @@
     .right {
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 50px;
+      padding-right: 30px;
 
       @include mobile{
         display: none;

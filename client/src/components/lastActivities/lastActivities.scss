@@ -1,0 +1,10 @@
+@import "../../style.scss";
+
+.act {
+  @include themify($themes) {
+    .link {
+      text-decoration: none;
+      color: themed("textColor");
+    }
+  }
+}

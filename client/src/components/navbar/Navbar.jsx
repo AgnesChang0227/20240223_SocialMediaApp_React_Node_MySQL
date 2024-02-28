@@ -20,24 +20,27 @@ const Navbar = () => {
     <div className="navbar">
       <div className="left">
         <Link to="/" style={{ textDecoration: "none" }}>
-          <span>lamasocial</span>
+          <span>SocialWeb </span>
         </Link>
-        <HomeOutlinedIcon />
+        <Link to="/" className="icon" style={{ textDecoration: "none"}}>
+          <HomeOutlinedIcon />
+        </Link>
         {darkMode ? (
-          <WbSunnyOutlinedIcon onClick={toggle} />
+          <WbSunnyOutlinedIcon onClick={toggle} style={{cursor:"pointer"}}/>
         ) : (
-          <DarkModeOutlinedIcon onClick={toggle} />
+          <DarkModeOutlinedIcon onClick={toggle} style={{cursor:"pointer"}}/>
         )}
-        <GridViewOutlinedIcon />
+        {/*<GridViewOutlinedIcon />*/}
         <div className="search">
           <SearchOutlinedIcon />
           <input type="text" placeholder="Search..." />
         </div>
       </div>
       <div className="right">
-        <PersonOutlinedIcon />
+        <PersonOutlinedIcon  />
         <EmailOutlinedIcon />
         <NotificationsOutlinedIcon />
+        {/*btn for logout*/}
         <div className="user">
           <img
             src={"/upload/"+currentUser.profilePic}
