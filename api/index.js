@@ -21,7 +21,7 @@ app.use((req,res,next)=>{
 app.use(express.json());
 app.use(
   cors({
-    origin:"http://localhost:3000"
+    origin:"http://localhost:8088"
     })
 );
 app.use(cookieParser())
@@ -52,6 +52,7 @@ app.use("/api/relationships",relationshipRoutes);
 
 
 //port
-app.listen(8080,()=>{
-  console.log("API working")
+const port = 8080;
+app.listen(port,()=>{
+  console.log(`API working on ${port}`)
 })

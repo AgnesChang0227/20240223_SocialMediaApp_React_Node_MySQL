@@ -9,10 +9,6 @@ export const AuthContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("user")) || null
   );
 
-  useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(currentUser));
-  }, [currentUser]);
-
   const login = async (inputs) => {
     try {
       const res = await makeRequest.post("/auth/login",inputs);
