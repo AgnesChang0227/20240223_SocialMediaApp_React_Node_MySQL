@@ -1,4 +1,5 @@
 import {useRoutes,} from "react-router-dom";
+import {SnackbarProvider} from 'notistack';// alert bar
 
 import {routes} from "./routes";
 
@@ -10,7 +11,12 @@ function App() {
 
   return (
     <div>
-      {router}
+      <SnackbarProvider
+        className="snackbar"
+        anchorOrigin={{ horizontal:"right", vertical: "bottom" }}
+      >
+        {router}
+      </SnackbarProvider>
     </div>
   );
 }
