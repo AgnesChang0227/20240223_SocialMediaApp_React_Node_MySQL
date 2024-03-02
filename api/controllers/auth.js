@@ -1,28 +1,34 @@
 import {db} from "../connect.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
+import moment from "moment/moment.js";
 
+//give: {email,password,name,profilePic}
 export const register = (req, res) => {
 //  check user if exist
-  const q = "SELECT * FROM users WHERE username = ?";
+  const q = "SELECT * FROM users WHERE email = ?";
 
-  db.query(q, [req.body.username], (err, data) => {
+  db.query(q, [req.body.email], (err, data) => {
     if (err) return res.status(500).json(err);
-    //get user data => username should be unique
+    //  check if user already exist
     if (data.length) return res.status(400).json("User already exists")
+
     //  create a new user
-    //    hash the password
+    //  Step1: hash the password
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
-
-    const q = "INSERT INTO users (`username`,`email`,`password`,`name`) VALUE (?)";
+    // Step2: save into DB
     const values = [
-      req.body.username,
       req.body.email,
       hashedPassword,
-      req.body.name
+      req.body.name,
+      req.body.profilePic,
+      "unverified",
+      moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
     ];
+    const q = "INSERT INTO users (`email`,`password`,`name`,`profilePic`,`status`,`createdAt`) VALUE (?)";
+
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json("User has been created");
