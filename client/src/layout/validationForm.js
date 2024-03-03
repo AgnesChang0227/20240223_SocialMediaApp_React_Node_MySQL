@@ -24,24 +24,21 @@ const ValidationForm = ({validationSchema, initialValues, submitHandler, resendH
     <div>
       <form onSubmit={formik.handleSubmit}>
         {keys.length ? keys.map((key) => (
-            <>
-              <TextField
+              <TextField key={key+1}
                 hidden="hidden"
                 disabled={(key === "email")&&!!resendHandler}
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                key={key}
                 id={key}
                 name={key}
                 value={formik.values[`${key}`]}
+                autoComplete="new-password"
                 type={(key === "password" || key === "confirmPassword") ? "password" : "text"}
                 placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
                 error={formik.touched[`${key}`] && Boolean(formik.errors[`${key}`])}
                 helperText={formik.touched[`${key}`] && formik.errors[`${key}`]}
               />
-            </>
-
           ))
           : <></>
         }

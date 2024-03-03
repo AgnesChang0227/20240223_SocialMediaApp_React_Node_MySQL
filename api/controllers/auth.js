@@ -8,10 +8,10 @@ import {nanoid} from "nanoid";
 
 //for sending email
 const nodemail = nodemailer.createTransport({
-  service: "Gmail",
+  service: "gmail",
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS
+    user: "dc.agneschang@gmail.com",
+    pass: "rpuilhikyisdsoxo"
   }
 })
 const mailMaker = (email, code) => {
@@ -32,23 +32,15 @@ const mailMaker = (email, code) => {
          `
     })
 }
-// email
-export const sendEmail = (req,res)=>{
-  //   //  gen code
-  // const code = nanoid(6).toUpperCase()
-  // //send email
-  // const mail = mailMaker(email, code);
-  //
-}
 
 // email,code
-export const verifiedCode = (req,res)=>{
+export const verifiedCode = (req, res) => {
 
 }
 
 //give: {email,password,code}
 export const register = (req, res) => {
-  const {email,password}=req.body;
+  const {email, password} = req.body;
 
   const q = "SELECT * FROM users WHERE email = ?";
   db.query(q, [email], (err, data) => {
@@ -59,21 +51,30 @@ export const register = (req, res) => {
     if (data.length) return res.status(400).json("User already exists")
 
     //  if not exist, create a new user
-    //  Step1: hash the password
+
+    //  Step1: send email with verify code
+    const code = nanoid(6).toUpperCase()
+    const mail = mailMaker(email, code);
+    nodemail.sendMail(mail, (err,info) => {
+      if (err) return res.status(500).json(err);
+    });
+
+    //  Step2: create user
+    //hash the password
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
     const name = email.slice(0, email.indexOf("@"));
 
-    // Step2: save into DB
     const values = [
       email,
       hashedPassword,
       name,
-      "",
-      "unverified",
+      "",//profilePic
+      "unverified",//status
+      moment(Date.now())+code,//verifyCod
       moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
     ];
-    const q = "INSERT INTO users (`email`,`password`,`name`,`profilePic`,`status`,`createdAt`) VALUE (?)";
+    const q = "INSERT INTO users (`email`,`password`,`name`,`profilePic`,`status`,`verifyCode`,`createdAt`) VALUE (?)";
 
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err);
@@ -111,8 +112,8 @@ export const login = (req, res) => {
 
 export const logout = (req, res) => {
   return res.clearCookie({
-    secure:true,
-    sameSite:"none",//如果端口不一樣，默認會禁止清理cookie
+    secure: true,
+    sameSite: "none",//如果端口不一樣，默認會禁止清理cookie
   })
     .status(200)
     .json("User has been logout");

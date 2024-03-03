@@ -38,29 +38,26 @@ const Register = () => {
 
   //  create user & send code
   const rSH = async (values) => {
-    //{email,password,confirmPassword}
-    // await makeRequest.post("/auth/register", values)
-    //   .then(res => {
-    //     // console.log(res);
-    //     //res.data => "user has been created"
-    //     enqueueSnackbar("Your account has been created successfully! You can login now!", {variant: 'success'})
-    //     setEmail(email);
-    //     setCreated(true);
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //     switch (err.code) {
-    //       case "ERR_NETWORK":
-    //       case "ERR_BAD_RESPONSE":
-    //         enqueueSnackbar("Something wrong on server side...", {variant: 'error'});
-    //         break;
-    //       default:
-    //         enqueueSnackbar(err.response.data, {variant: 'error'})
-    //     }
-    //   })
-    console.log(values);
-    setEmail(values.email)
-    setCreated(true);
+    // {email,password,confirmPassword}
+    await makeRequest.post("/auth/register", values)
+      .then(res => {
+        // console.log(res);
+        //res.data => "user has been created"
+        enqueueSnackbar("Your account has been created successfully! You can login now!", {variant: 'success'})
+        setEmail(values.email);
+        setCreated(true);
+      })
+      .catch(err => {
+        console.log(err)
+        switch (err.code) {
+          case "ERR_NETWORK":
+          case "ERR_BAD_RESPONSE":
+            enqueueSnackbar("Something wrong on server side...", {variant: 'error'});
+            break;
+          default:
+            enqueueSnackbar(err.response.data, {variant: 'error'})
+        }
+      })
   }
 
   return (
