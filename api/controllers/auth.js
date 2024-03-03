@@ -33,9 +33,67 @@ const mailMaker = (email, code) => {
     })
 }
 
-// email,code
+// {email,code}
 export const verifiedCode = (req, res) => {
+  const {email, code} = req.body;
+  const q = "SELECT * FROM users WHERE email = ?";
+  db.query(q, [email], (err, data) => {
+    if (err) return res.status(500).json(err);
+    if (!data.length) return res.status(404).json("User not found");
 
+    //  check invalid or not
+    const vc = data[0].verifyCode;
+    //check code
+    const verifyCode = vc.slice(vc.length - 6);
+
+    //check date
+    const date = vc.slice(0, vc.length - 6);
+    const overdue = !(moment(Date.now()).isBefore(parseInt(date) + (1000 * 60 * 60)));
+
+    if (code !== verifyCode || overdue) return res.status(400).json("Invalid code");
+
+    //  update user status and verify code
+    const q = "UPDATE users SET `status`=?,`verifyCode`=? WHERE id=?";
+    const values = ["verified", "", data[0].id];
+    db.query(q, values, (err, data) => {
+      if (err) return res.status(500).join(err);
+      if (data.affectedRows > 0) return res.json("Finished verification!");
+    })
+  })
+}
+
+// /:email
+export const resendCode = (req, res) => {
+  const email = req.params.email;
+
+  const q = "SELECT * FROM users WHERE email = ?";
+  db.query(q, [email], (err, data) => {
+    // error
+    if (err) return res.status(500).json(err);
+    //not founded
+    if (!data.length) return res.status(404).json("User not found");
+
+    //  if not exist, create a new user
+    //  Step1: send email with verify code
+    const code = nanoid(6).toUpperCase()
+
+    const mail = mailMaker(email, code);
+    nodemail.sendMail(mail, (err, info) => {
+      if (err) return res.status(500).json(err);
+    });
+
+    const q = "UPDATE users SET `status`=?,`verifyCode`=? WHERE id=?";
+    const values = [
+      "unverified",
+      moment(Date.now())+code,
+      data[0].id
+    ];
+
+    db.query(q, values, (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (data.affectedRows>0) return res.json("Sent and updated!");
+    })
+  })
 }
 
 //give: {email,password,code}
@@ -51,11 +109,10 @@ export const register = (req, res) => {
     if (data.length) return res.status(400).json("User already exists")
 
     //  if not exist, create a new user
-
     //  Step1: send email with verify code
     const code = nanoid(6).toUpperCase()
     const mail = mailMaker(email, code);
-    nodemail.sendMail(mail, (err,info) => {
+    nodemail.sendMail(mail, (err, info) => {
       if (err) return res.status(500).json(err);
     });
 
@@ -71,7 +128,7 @@ export const register = (req, res) => {
       name,
       "",//profilePic
       "unverified",//status
-      moment(Date.now())+code,//verifyCod
+      moment(Date.now()) + code,//verifyCod
       moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
     ];
     const q = "INSERT INTO users (`email`,`password`,`name`,`profilePic`,`status`,`verifyCode`,`createdAt`) VALUE (?)";
