@@ -9,18 +9,8 @@ export const AuthContextProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("user")) || null
   );
 
-  const login = async (inputs) => {
-    try {
-      const res = await makeRequest.post("/auth/login",inputs);
-      setCurrentUser(res.data);
-    }catch (err){
-      return err;
-    }
-  };
-
-
   return (
-    <AuthContext.Provider value={{ currentUser, login, setCurrentUser }}>
+    <AuthContext.Provider value={{ currentUser,setCurrentUser }}>
       {children}
     </AuthContext.Provider>
   );

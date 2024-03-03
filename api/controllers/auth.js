@@ -2,8 +2,51 @@ import {db} from "../connect.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import moment from "moment/moment.js";
+import nodemailer from "nodemailer";
+import {nanoid} from "nanoid";
 
-//give: {email,password}
+
+//for sending email
+const nodemail = nodemailer.createTransport({
+  service: "Gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASS
+  }
+})
+const mailMaker = (email, code) => {
+  return (
+    {
+      from: `SocialWeb`,// 发件人
+      subject: 'Welcome To SocialWeb!',//邮箱主题
+      to: email,//收件人，这里由post请求传递过来
+      // 邮件内容，用html格式编写
+      html: `
+             <h1>Thanks for signing up for SocialWeb! </h1>
+             <p>Here's your verification code 
+                <i style="color:rgb(215,43,50);">( Valid time: 1 hour )</i>:
+                <strong style="color:rgb(19,75,71);">${code}</strong>
+             </p>
+             <p>Let's get your email address verified!</p>
+             <p><a href="http://localhost:8088/">SocialWeb.com</a></p>
+         `
+    })
+}
+// email
+export const sendEmail = (req,res)=>{
+  //   //  gen code
+  // const code = nanoid(6).toUpperCase()
+  // //send email
+  // const mail = mailMaker(email, code);
+  //
+}
+
+// email,code
+export const verifiedCode = (req,res)=>{
+
+}
+
+//give: {email,password,code}
 export const register = (req, res) => {
   const {email,password}=req.body;
 
@@ -40,12 +83,12 @@ export const register = (req, res) => {
 
 };
 
+//give: {email,password}
 export const login = (req, res) => {
-
-  const q = "SELECT * FROM users WHERE username = ?";
-
-  db.query(q, [req.body.username], (err, data) => {
+  const q = "SELECT * FROM users WHERE email = ?";
+  db.query(q, [req.body.email], (err, data) => {
     if (err) return res.status(500).json(err);
+
     if (!data.length) return res.status(404).json("User not found");
 
     const checkPassword = bcrypt.compareSync(req.body.password, data[0].password);

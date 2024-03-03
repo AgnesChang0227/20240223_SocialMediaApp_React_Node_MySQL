@@ -12,7 +12,7 @@ function App() {
   return (
     <div>
       <SnackbarProvider
-        className="snackbar"
+        preventDuplicate={true}
         anchorOrigin={{ horizontal:"right", vertical: "bottom" }}
       >
         {router}
