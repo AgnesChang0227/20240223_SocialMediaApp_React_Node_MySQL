@@ -96,6 +96,8 @@ export const resendCode = (req, res) => {
   })
 }
 
+// changePassword
+
 //give: {email,password,code}
 export const register = (req, res) => {
   const {email, password} = req.body;
@@ -114,31 +116,29 @@ export const register = (req, res) => {
     const mail = mailMaker(email, code);
     nodemail.sendMail(mail, (err, info) => {
       if (err) return res.status(500).json(err);
+      //  Step2: create user
+      //hash the password
+      const salt = bcrypt.genSaltSync(10);
+      const hashedPassword = bcrypt.hashSync(password, salt);
+      const name = email.slice(0, email.indexOf("@"));
+
+      const values = [
+        email,
+        hashedPassword,
+        name,
+        "",//profilePic
+        "unverified",//status
+        moment(Date.now()) + code,//verifyCod
+        moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
+      ];
+      const q = "INSERT INTO users (`email`,`password`,`name`,`profilePic`,`status`,`verifyCode`,`createdAt`) VALUE (?)";
+
+      db.query(q, [values], (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json("User has been created");
+      })
     });
-
-    //  Step2: create user
-    //hash the password
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    const name = email.slice(0, email.indexOf("@"));
-
-    const values = [
-      email,
-      hashedPassword,
-      name,
-      "",//profilePic
-      "unverified",//status
-      moment(Date.now()) + code,//verifyCod
-      moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
-    ];
-    const q = "INSERT INTO users (`email`,`password`,`name`,`profilePic`,`status`,`verifyCode`,`createdAt`) VALUE (?)";
-
-    db.query(q, [values], (err, data) => {
-      if (err) return res.status(500).json(err);
-      return res.status(200).json("User has been created");
-    })
   })
-
 };
 
 //give: {email,password}
