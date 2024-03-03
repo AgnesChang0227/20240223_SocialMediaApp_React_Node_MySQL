@@ -12,13 +12,13 @@ const validationSchema = yup.object().shape({
 });
 
 
-const VerifyEmail = ({email}) => {
+const VerifyEmail = ({email,setStatus}) => {
   const {enqueueSnackbar} = useSnackbar();
   const navigate = useNavigate();
 
   //initialValues
   const initialValues = {
-    email: email,
+    email: email||"",
     code:""
   }
 
@@ -44,8 +44,14 @@ const VerifyEmail = ({email}) => {
   const submitHandler =async (values) => {
     await makeRequest.post("/auth/verify", values)
       .then(res => {
-        enqueueSnackbar("Verify successfully! Turn to login page...", {variant: 'success'});
-        navigate("/login");
+        //register
+        if (initialValues.email.length>0){
+          enqueueSnackbar("Verify successfully! Turn to login page...", {variant: 'success'});
+          navigate("/login");
+        }
+      //  forgot password
+        enqueueSnackbar("Verify successfully! Please enter your new password", {variant: 'success'});
+        setStatus("changePassword")
       })
       .catch(err => {
         switch (err.code) {

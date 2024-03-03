@@ -48,7 +48,6 @@ const Register = () => {
         setCreated(true);
       })
       .catch(err => {
-        console.log(err)
         switch (err.code) {
           case "ERR_NETWORK":
           case "ERR_BAD_RESPONSE":

@@ -33,35 +33,6 @@ const mailMaker = (email, code) => {
     })
 }
 
-// {email,code}
-export const verifiedCode = (req, res) => {
-  const {email, code} = req.body;
-  const q = "SELECT * FROM users WHERE email = ?";
-  db.query(q, [email], (err, data) => {
-    if (err) return res.status(500).json(err);
-    if (!data.length) return res.status(404).json("User not found");
-
-    //  check invalid or not
-    const vc = data[0].verifyCode;
-    //check code
-    const verifyCode = vc.slice(vc.length - 6);
-
-    //check date
-    const date = vc.slice(0, vc.length - 6);
-    const overdue = !(moment(Date.now()).isBefore(parseInt(date) + (1000 * 60 * 60)));
-
-    if (code !== verifyCode || overdue) return res.status(400).json("Invalid code");
-
-    //  update user status and verify code
-    const q = "UPDATE users SET `status`=?,`verifyCode`=? WHERE id=?";
-    const values = ["verified", "", data[0].id];
-    db.query(q, values, (err, data) => {
-      if (err) return res.status(500).join(err);
-      if (data.affectedRows > 0) return res.json("Finished verification!");
-    })
-  })
-}
-
 // /:email
 export const resendCode = (req, res) => {
   const email = req.params.email;
@@ -85,18 +56,82 @@ export const resendCode = (req, res) => {
     const q = "UPDATE users SET `status`=?,`verifyCode`=? WHERE id=?";
     const values = [
       "unverified",
-      moment(Date.now())+code,
+      moment(Date.now()) + code,
       data[0].id
     ];
 
     db.query(q, values, (err, data) => {
       if (err) return res.status(500).json(err);
-      if (data.affectedRows>0) return res.json("Sent and updated!");
+      if (data.affectedRows > 0) return res.json("Sent and updated!");
+    })
+  })
+}
+
+// {email,code} => jwt tempAccessToken
+export const verifiedCode = (req, res) => {
+  const {email, code} = req.body;
+  const q = "SELECT * FROM users WHERE email = ?";
+  db.query(q, [email], (err, data) => {
+    if (err) return res.status(500).json(err);
+    if (!data.length) return res.status(404).json("User not found");
+
+    //  check invalid or not
+    const vc = data[0].verifyCode;
+    //check code
+    const verifyCode = vc.slice(vc.length - 6);
+
+    //check date
+    const date = vc.slice(0, vc.length - 6);
+    const overdue = !(moment(Date.now()).isBefore(parseInt(date) + (1000 * 60 * 60)));
+
+    if (code !== verifyCode || overdue) return res.status(400).json("Invalid code");
+
+    //  update user status and verify code
+    const q = "UPDATE users SET `status`=?,`verifyCode`=? WHERE id=?";
+    const values = ["verified", "", data[0].id];
+
+    const token = jwt.sign({id: data[0].id}, "tempKey");
+    db.query(q, values, (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (data.affectedRows > 0) {
+        return res.cookie("tempAccessToken", token, {httpOnly: true,})
+          .status(200)
+          .json("Finished verification!");
+      }
     })
   })
 }
 
 // changePassword
+export const changePassword = (req, res) => {
+  const {password} = req.body;
+
+  const token = req.cookies.tempAccessToken;
+  if (!token) return res.status(401).json("You don't have the access to do that)");
+
+  jwt.verify(token, "tempKey", (err, userInfo) => {
+    console.log(userInfo);
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+
+    const q = "UPDATE users SET `password`=? WHERE id=?";
+    const values = [hashedPassword, userInfo.id];
+    db.query(q, values, (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (data.affectedRows > 0) {
+        return res.clearCookie("tempAccessToken",
+          {
+            secure: true,
+            sameSite: "none",//如果端口不一樣，默認會禁止清理cookie
+          })
+          .status(200)
+          .json("Change password successfully!");
+      }
+    })
+  })
+}
 
 //give: {email,password,code}
 export const register = (req, res) => {
@@ -168,7 +203,7 @@ export const login = (req, res) => {
 };
 
 export const logout = (req, res) => {
-  return res.clearCookie({
+  return res.clearCookie("accessToken", {
     secure: true,
     sameSite: "none",//如果端口不一樣，默認會禁止清理cookie
   })

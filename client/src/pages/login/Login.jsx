@@ -2,11 +2,13 @@ import {useContext, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {AuthContext} from "../../context/authContext";
 import * as yup from "yup";
-
-import "./login.scss"
 import ValidationForm from "../../layout/validationForm";
 import {makeRequest} from "../../axios";
 import {useSnackbar} from "notistack";
+
+import "./login.scss"
+import VerifyEmail from "../../components/verifyEmail";
+import ChangePassword from "../../components/changePassword";
 
 //validationSchema
 const lVS = yup.object().shape({
@@ -15,23 +17,24 @@ const lVS = yup.object().shape({
 });
 //initialValues
 const lIV = {
-  email:"",
-  password:""
+  email: "",
+  password: ""
 }
 
 const Login = () => {
   const navigate = useNavigate();
   const {setCurrentUser} = useContext(AuthContext);
   const {enqueueSnackbar} = useSnackbar();
+  const [status, setStatus] = useState("changePassword");
 
   const lSH = async (values) => {
-    await makeRequest.post("/auth/login",values)
-      .then(res=>{
+    await makeRequest.post("/auth/login", values)
+      .then(res => {
         enqueueSnackbar(`Welcome back, user ${res.data.name} !`, {variant: 'success'})
         setCurrentUser(res.data)
         navigate("/");
       })
-      .catch(err=>{
+      .catch(err => {
         switch (err.code) {
           case "ERR_NETWORK":
           case "ERR_BAD_RESPONSE":
@@ -60,8 +63,28 @@ const Login = () => {
           </Link>
         </div>
         <div className="right">
-          <h1>Login</h1>
-          <ValidationForm validationSchema={lVS} initialValues={lIV} submitHandler={lSH}/>
+          {status === "login" && (
+            <>
+              <h1>Login</h1>
+              <ValidationForm validationSchema={lVS} initialValues={lIV} submitHandler={lSH}/>
+              <Link onClick={()=>setStatus("forgetPassword")}>Forget your password?</Link>
+            </>
+          )}
+          {status==="forgetPassword"&&(
+            <>
+              <h1>Verify your email first</h1>
+              <VerifyEmail setStatus={setStatus}/>
+              <Link onClick={()=>setStatus("login")}>Login</Link>
+            </>
+          )}
+          {status==="changePassword"&&(
+            <>
+              <h1>Reset your password</h1>
+              <ChangePassword setStatus={setStatus}/>
+              <Link onClick={()=>setStatus("login")}>Login</Link>
+            </>
+          )}
+
         </div>
       </div>
     </div>

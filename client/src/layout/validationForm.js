@@ -11,7 +11,6 @@ const initialKeys = (initialValues) => {
 }
 const ValidationForm = ({validationSchema, initialValues, submitHandler, resendHandler}) => {
   const [keys, setKeys] = useState(initialKeys(initialValues) || []);
-  // const [disabled, setDisabled] = useState(!!resendHandler);
 
   const formik = useFormik({
     initialValues: initialValues,
@@ -26,7 +25,7 @@ const ValidationForm = ({validationSchema, initialValues, submitHandler, resendH
         {keys.length ? keys.map((key) => (
               <TextField key={key+1}
                 hidden="hidden"
-                disabled={(key === "email")&&!!resendHandler}
+                disabled={(key === "email")&&!!resendHandler&&initialValues[`${key}`].length>0}
                 variant="standard"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
