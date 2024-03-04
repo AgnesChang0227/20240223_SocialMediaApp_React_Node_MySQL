@@ -11,6 +11,9 @@ const Posts = ({userId}) => {
       queryFn: () =>
         makeRequest.get("/posts"+(userId?`?userId=${userId}`:""))
           .then(res => res.data)
+          .catch(err=>{
+            console.log(err);
+          })
     })
 
   return <div className="posts">

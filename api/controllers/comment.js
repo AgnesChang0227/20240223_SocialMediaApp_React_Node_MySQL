@@ -4,16 +4,17 @@ import moment from "moment/moment.js";
 
 export const getComments = (req, res) => {
   const q = `
-      SELECT c.*, u.id AS userId, name, profilePic
+      SELECT c.*, name, profilePic
       FROM comments AS c
-               JOIN users AS u
-                    ON (u.id = c.userId)
+               JOIN profiles AS p
+                    ON (p.userId = c.userId)
       WHERE c.postId = ?
       ORDER BY c.createdAt DESC
   `
 
   db.query(q, [req.query.postId], (err, data) => {
     if (err) return res.status(500).json(err);
+    // console.log(data);
     return res.status(200).json(data);
   })
 }

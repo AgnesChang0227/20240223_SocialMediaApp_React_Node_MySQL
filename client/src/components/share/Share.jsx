@@ -6,6 +6,7 @@ import {useContext, useState} from "react";
 import {AuthContext} from "../../context/authContext";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {makeRequest} from "../../axios";
+import person from "../../assets/person.png";
 
 const Share = () => {
   const [file, setFile] = useState(null);
@@ -52,7 +53,8 @@ const Share = () => {
         <div className="top">
           <div className="left">
             <img
-              src={"/upload/"+currentUser.profilePic}
+              src={!!!currentUser.profilePic.length?person
+                :"(/upload/"+currentUser.profilePic}
               alt=""
             />
             <input type="text" placeholder={`What's on your mind ${currentUser.name}?`}
@@ -77,14 +79,14 @@ const Share = () => {
                 <span>Add Image</span>
               </div>
             </label>
-            <div className="item">
-              <img src={Map} alt=""/>
-              <span>Add Place</span>
-            </div>
-            <div className="item">
-              <img src={Friend} alt=""/>
-              <span>Tag Friends</span>
-            </div>
+            {/*<div className="item">*/}
+            {/*  <img src={Map} alt=""/>*/}
+            {/*  <span>Add Place</span>*/}
+            {/*</div>*/}
+            {/*<div className="item">*/}
+            {/*  <img src={Friend} alt=""/>*/}
+            {/*  <span>Tag Friends</span>*/}
+            {/*</div>*/}
           </div>
           <div className="right">
             <button onClick={handleClick}>Share</button>

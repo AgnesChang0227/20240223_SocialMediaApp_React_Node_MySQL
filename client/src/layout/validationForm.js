@@ -46,7 +46,7 @@ const ValidationForm = ({validationSchema, initialValues, submitHandler, resendH
             <Button
               onClick={()=>resendHandler(formik.values.email) }
             >
-              Resend Email
+              Send Email
             </Button>
           )}
             <Button type="submit" style={{backgroundColor: "rebeccapurple"}}>

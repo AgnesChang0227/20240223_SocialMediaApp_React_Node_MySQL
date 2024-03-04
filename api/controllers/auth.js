@@ -110,7 +110,6 @@ export const changePassword = (req, res) => {
   if (!token) return res.status(401).json("You don't have the access to do that)");
 
   jwt.verify(token, "tempKey", (err, userInfo) => {
-    console.log(userInfo);
     if (err) return res.status(403).json("Token is not valid!");
 
     const salt = bcrypt.genSaltSync(10);
@@ -155,22 +154,26 @@ export const register = (req, res) => {
       //hash the password
       const salt = bcrypt.genSaltSync(10);
       const hashedPassword = bcrypt.hashSync(password, salt);
-      const name = email.slice(0, email.indexOf("@"));
-
+      //create user
       const values = [
         email,
         hashedPassword,
-        name,
-        "",//profilePic
         "unverified",//status
         moment(Date.now()) + code,//verifyCod
         moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")
       ];
-      const q = "INSERT INTO users (`email`,`password`,`name`,`profilePic`,`status`,`verifyCode`,`createdAt`) VALUE (?)";
-
+      const q = "INSERT INTO users (`email`,`password`,`status`,`verifyCode`,`createdAt`) VALUE (?)";
       db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
-        return res.status(200).json("User has been created");
+
+        //create profile
+        const q = "INSERT INTO profiles (`userId`,`name`,`profilePic`,`lastEdited`) VALUE (?)";
+        const name = email.slice(0, email.indexOf("@"));
+        const values = [data.insertId, name, "", moment(Date.now()).format("YYYY-MM-DD HH:mm:ss")];
+        db.query(q, [values], (err, data) => {
+          if (err) return res.status(500).json(err);
+          return res.status(200).json("User has been created");
+        })
       })
     });
   })
@@ -178,7 +181,11 @@ export const register = (req, res) => {
 
 //give: {email,password}
 export const login = (req, res) => {
-  const q = "SELECT * FROM users WHERE email = ?";
+  const q = `SELECT u.*, p.name, p.profilePic
+             FROM users AS u
+                      Left Join profiles AS p
+                                ON (u.id = p.userId)
+             WHERE u.email = ?`;
   db.query(q, [req.body.email], (err, data) => {
     if (err) return res.status(500).json(err);
 

@@ -41,8 +41,8 @@ const LastActivities = () => {
   return (
     <div className="act">
       <span>Latest Activities</span>
-      {data && data.map(act => (
-        <div className="user">
+      {data && data.map((act,index) => (
+        <div className="user" key={index}>
           <div className="userInfo">
             <img src={act.profilePic}/>
             <p>

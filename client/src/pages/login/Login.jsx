@@ -25,11 +25,12 @@ const Login = () => {
   const navigate = useNavigate();
   const {setCurrentUser} = useContext(AuthContext);
   const {enqueueSnackbar} = useSnackbar();
-  const [status, setStatus] = useState("changePassword");
+  const [status, setStatus] = useState("login");
 
   const lSH = async (values) => {
     await makeRequest.post("/auth/login", values)
       .then(res => {
+        console.log(res.data)
         enqueueSnackbar(`Welcome back, user ${res.data.name} !`, {variant: 'success'})
         setCurrentUser(res.data)
         navigate("/");

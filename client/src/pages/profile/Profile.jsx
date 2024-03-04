@@ -15,6 +15,7 @@ import {useLocation, useParams} from "react-router-dom";
 import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../context/authContext";
 import Update from "../../components/update/Update";
+import person from "../../assets/person.png";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -84,7 +85,8 @@ const Profile = () => {
               className="cover"
             />
             <img
-              src={"/upload/" + data.profilePic}
+              src={!!!data.profilePic.length?person
+                :"(/upload/"+data.profilePic}
               alt=""
               className="profilePic"
             />
