@@ -187,7 +187,7 @@ export const login = (req, res) => {
     const token = jwt.sign({id: data[0].id}, "secretKey");
 
     //separate password from user info
-    const {password, ...others} = data[0]
+    const {password,verifyCode,status, ...others} = data[0]
 
     //return
     return res.cookie("accessToken", token,

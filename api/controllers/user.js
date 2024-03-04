@@ -20,9 +20,10 @@ export const updateUser = (req, res) => {
   jwt.verify(token, "secretKey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const q = 'UPDATE profiles SET `name`=?,`city`=?,`website`=?,`coverPic`=?,`profilePic`=? WHERE userId=?'
+    const q = 'UPDATE profiles SET `name`=?,`desc`=?,`city`=?,`website`=?,`coverPic`=?,`profilePic`=? WHERE userId=?'
     const values = [
       req.body.name,
+      req.body.desc,
       req.body.city,
       req.body.website,
       req.body.coverPic,

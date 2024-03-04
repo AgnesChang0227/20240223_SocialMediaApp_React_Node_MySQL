@@ -28,7 +28,7 @@ const LeftBar = () => {
           <div className="user">
             <img
               src={!!!currentUser.profilePic.length?person
-                :"(/upload/"+currentUser.profilePic}
+                :currentUser.profilePic}
               alt=""
             />
             <span>{currentUser.name}</span>

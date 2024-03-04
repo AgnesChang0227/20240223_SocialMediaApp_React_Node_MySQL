@@ -8,6 +8,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import coverImage from "../../assets/defaultCover.jpg";
 import person from "../../assets/person.png";
 import {Box, Button} from "@mui/material";
+import {useSnackbar} from "notistack";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Required"),
@@ -21,6 +22,7 @@ const Update = ({setOpenUpdate, user}) => {
   const [cover,setCover] = useState(null)
   const [profile,setProfile] = useState(null)
   const queryClient = useQueryClient();
+  const {enqueueSnackbar} = useSnackbar();
 
   const initialValues = {
     name: user.name,
@@ -31,7 +33,10 @@ const Update = ({setOpenUpdate, user}) => {
 
   const mutation = useMutation({
     mutationFn: (user) => {
-      return makeRequest.put("/users", user);
+      return makeRequest.put("/users", user)
+        .then(res=>{
+          enqueueSnackbar(`Update successfully !`, {variant: 'success'})
+        })
     },
     onSuccess: () => {
       // Invalidate and refetch
@@ -54,7 +59,7 @@ const Update = ({setOpenUpdate, user}) => {
     //upload images
     const coverUrl = cover ? await upload(cover,"cover") : user.coverPic;
     const profileUrl = profile ? await upload(profile,"profile") : user.profilePic;
-    // console.log({coverPic: coverUrl, profilePic: profileUrl});
+
     //update user
     mutation.mutate({...values, coverPic: coverUrl, profilePic: profileUrl});
     setOpenUpdate(false)
