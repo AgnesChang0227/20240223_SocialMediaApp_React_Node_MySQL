@@ -25,11 +25,6 @@ const Profile = () => {
       queryFn: () =>
         makeRequest.get("/users/find/" + userId)
           .then(res => {
-            console.log({
-              ...currentUser,
-              name: res.data.name,
-              profilePic: res.data.profilePic
-            })
             //check if user's name and profilePic is not latest
             if ((currentUser.id === userId) &&
               (currentUser.name !== res.data.name ||
