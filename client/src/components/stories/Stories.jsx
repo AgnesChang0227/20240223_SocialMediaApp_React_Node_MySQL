@@ -35,8 +35,7 @@ const Stories = () => {
   return (
     <div className="stories">
       <div className="story">
-        <img src={!!!currentUser.profilePic.length ? person
-          : "(/upload/" + currentUser.profilePic}
+        <img src={!!!currentUser.profilePic.length ? person : currentUser.profilePic}
              alt=""/>
         <span>{currentUser.name}</span>
         <button>+</button>

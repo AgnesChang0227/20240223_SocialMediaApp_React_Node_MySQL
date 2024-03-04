@@ -54,9 +54,10 @@ const Update = ({setOpenUpdate, user}) => {
     //upload images
     const coverUrl = cover ? await upload(cover,"cover") : user.coverPic;
     const profileUrl = profile ? await upload(profile,"profile") : user.profilePic;
-    console.log({coverPic: coverUrl, profilePic: profileUrl});
+    // console.log({coverPic: coverUrl, profilePic: profileUrl});
     //update user
     mutation.mutate({...values, coverPic: coverUrl, profilePic: profileUrl});
+    setOpenUpdate(false)
   }
 
   return (
@@ -68,14 +69,14 @@ const Update = ({setOpenUpdate, user}) => {
           <div className="images">
             <div>
               <img
-                src={!!!user.coverPic ? coverImage :"/upload/" + user.coverPic}
+                src={!!!user.coverPic ? coverImage : user.coverPic}
                 alt=""
                 className="cover"
               />
             </div>
             <div>
               <img
-                src={!!!user.profilePic.length ? person : "(/upload/" + user.profilePic}
+                src={!!!user.profilePic.length ? person : user.profilePic}
                 alt=""
                 className="profilePic"
               />

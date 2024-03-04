@@ -64,7 +64,7 @@ const Navbar = () => {
         <div className="user">
           <img
             src={!!!currentUser.profilePic.length ? person
-              : "(/upload/" + currentUser.profilePic}
+              : currentUser.profilePic}
             alt="hi"
           />
           <span>{currentUser.name}</span>

@@ -13,7 +13,7 @@ import cover from "../../assets/defaultCover.jpg";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
-  const {currentUser,setCurrentUser} = useContext(AuthContext);
+  const {currentUser, setCurrentUser} = useContext(AuthContext);
 
   let {userId} = useParams();
   userId = parseInt(userId);
@@ -24,16 +24,22 @@ const Profile = () => {
       queryKey: ['user'],
       queryFn: () =>
         makeRequest.get("/users/find/" + userId)
-          .then(res =>  {
-            //check if user info is not latest
-            if (currentUser.id===res.data.id){
-              for (const key in res.data) {
-                if (currentUser[key]!==res.data[key]) {
-                  //update user info
-                  setCurrentUser(res.data);
-                  break;
-                }
-              }
+          .then(res => {
+            console.log({
+              ...currentUser,
+              name: res.data.name,
+              profilePic: res.data.profilePic
+            })
+            //check if user's name and profilePic is not latest
+            if ((currentUser.id === userId) &&
+              (currentUser.name !== res.data.name ||
+                currentUser.profilePic !== res.data.profilePic))
+            {
+              setCurrentUser({
+                ...currentUser,
+                name: res.data.name,
+                profilePic: res.data.profilePic
+              })
             }
             return res.data
           })
@@ -74,13 +80,12 @@ const Profile = () => {
         <>
           <div className="images">
             <img
-              src={!!!data.coverPic?cover:"/upload/" + data.coverPic}
+              src={!!!data.coverPic ? cover : data.coverPic}
               alt=""
               className="cover"
             />
             <img
-              src={!!!data.profilePic.length?person
-                :"(/upload/"+data.profilePic}
+              src={!!!data.profilePic.length ? person : data.profilePic}
               alt=""
               className="profilePic"
             />
