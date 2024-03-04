@@ -1,4 +1,4 @@
-import {db} from "../connect.js";
+import {db} from "../services/connect.js";
 import jwt from "jsonwebtoken";
 
 

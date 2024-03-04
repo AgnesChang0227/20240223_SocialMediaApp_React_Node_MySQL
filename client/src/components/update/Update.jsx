@@ -5,7 +5,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import * as yup from "yup";
 import ValidationForm from "../../layout/validationForm";
 import ClearIcon from '@mui/icons-material/Clear';
-import cover from "../../assets/defaultCover.jpg";
+import coverImage from "../../assets/defaultCover.jpg";
 import person from "../../assets/person.png";
 import {Box, Button} from "@mui/material";
 
@@ -18,8 +18,8 @@ const validationSchema = yup.object().shape({
 
 //name,desc,profilePic,coverPic,city,website
 const Update = ({setOpenUpdate, user}) => {
-  // const [cover,setCover] = useState(null)
-  // const [profile,setProfile] = useState(null)
+  const [cover,setCover] = useState(null)
+  const [profile,setProfile] = useState(null)
   const queryClient = useQueryClient();
 
   const initialValues = {
@@ -28,15 +28,6 @@ const Update = ({setOpenUpdate, user}) => {
     city: user.city || "",
     website: user.website || "",
   }
-  const submitHandler = (values) => {
-    console.log(values)
-  }
-
-  // const formik = useFormik({
-  //   initialValues: uploadInitialValues,
-  //   validationSchema: uploadValidationSchema
-  // });
-
 
   const mutation = useMutation({
     mutationFn: (user) => {
@@ -48,27 +39,25 @@ const Update = ({setOpenUpdate, user}) => {
     },
   })
 
-  // const upload = async (file) => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("file", file);
-  //     const res = await makeRequest.post("/upload", formData);
-  //     return res.data;
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
-
-  // const handleSubmit=async (e) => {
-  //   e.preventDefault();
-  //
-  //   const coverUrl = cover ? await upload(cover):user.coverPic;
-  //   const profileUrl = profile ? await upload(profile):user.profilePic;
-  //
-  //   mutation.mutate({...texts,coverPic:coverUrl,profilePic:profileUrl});
-  //   setOpenUpdate(false)
-  // //  update current user
-  // }
+  const upload = async (file,type) => {
+    // console.log(file)
+    try {
+      const formData = new FormData();
+      formData.append("image", file);//same as multer setting
+      const res = await makeRequest.post(`/upload?type=${type}`, formData);
+      return res.data;
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  const submitHandler = async (values) => {
+    //upload images
+    const coverUrl = cover ? await upload(cover,"cover") : user.coverPic;
+    const profileUrl = profile ? await upload(profile,"profile") : user.profilePic;
+    console.log({coverPic: coverUrl, profilePic: profileUrl});
+    //update user
+    mutation.mutate({...values, coverPic: coverUrl, profilePic: profileUrl});
+  }
 
   return (
     <div className="update">
@@ -79,15 +68,14 @@ const Update = ({setOpenUpdate, user}) => {
           <div className="images">
             <div>
               <img
-                src={!!!user.coverPic ? cover : "/upload/" + user.coverPic}
+                src={!!!user.coverPic ? coverImage :"/upload/" + user.coverPic}
                 alt=""
                 className="cover"
               />
             </div>
             <div>
               <img
-                src={!!!user.profilePic.length ? person
-                  : "(/upload/" + user.profilePic}
+                src={!!!user.profilePic.length ? person : "(/upload/" + user.profilePic}
                 alt=""
                 className="profilePic"
               />
@@ -95,17 +83,19 @@ const Update = ({setOpenUpdate, user}) => {
           </div>
           <Box style={{position:"relative",bottom:"-120px"}}
             sx={{ display: 'flex', flexDirection: 'row',justifyContent: 'space-between' }}>
+
             <div style={{width:"50%",padding:"10px"}}>
-              <h4>coverPic.png</h4>
-              <Button style={{width:"100%"}}>Cover Picture</Button>
-            </div>
-            <div style={{width:"50%",padding:"10px"}}>
-              <h4>profilePic.png</h4>
-              <Button style={{width:"100%"}}>Profile Picture</Button>
+              <h4>Cover Picture</h4>
+              <input type="file" name="coverPic" style={{width:"100%"}}
+                     onChange={e=>setCover(e.target.files[0])}/>
             </div>
 
+            <div style={{width:"50%",padding:"10px"}}>
+              <h4>Profile Picture</h4>
+              <input type="file" name="profilePic" style={{width:"100%"}}
+                     onChange={e=>setProfile(e.target.files[0])}/>
+            </div>
           </Box>
-
         </div>
         <div className="right">
           <h1>Update Profile</h1>
@@ -113,15 +103,6 @@ const Update = ({setOpenUpdate, user}) => {
                           initialValues={initialValues}
                           submitHandler={submitHandler}/>
         </div>
-        {/*<form >*/}
-        {/*  <input type="file" name="coverPic" onChange={e=>setCover(e.target.files[0])}/>*/}
-        {/*  <input type="file" name="profilePic" onChange={e=>setProfile(e.target.files[0])}/>*/}
-        {/*  <input type="text" name="name" placeholder={user.name} onChange={handleChange}/>*/}
-        {/*  <input type="text" name="city" placeholder={user.city} onChange={handleChange}/>*/}
-        {/*  <input type="text" name="website" placeholder={user.website} onChange={handleChange}/>*/}
-        {/*  <button onClick={handleSubmit}>Update</button>*/}
-        {/*</form>*/}
-
       </div>
     </div>
   );

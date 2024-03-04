@@ -1,19 +1,12 @@
-import {db} from "../connect.js";
+import {db} from "../services/connect.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 import moment from "moment/moment.js";
-import nodemailer from "nodemailer";
 import {nanoid} from "nanoid";
+import {nodemail} from "../services/sendEmail.js";
 
 
-//for sending email
-const nodemail = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "dc.agneschang@gmail.com",
-    pass: "rpuilhikyisdsoxo"
-  }
-})
+
 const mailMaker = (email, code) => {
   return (
     {
@@ -135,7 +128,6 @@ export const changePassword = (req, res) => {
 //give: {email,password,code}
 export const register = (req, res) => {
   const {email, password} = req.body;
-
   const q = "SELECT * FROM users WHERE email = ?";
   db.query(q, [email], (err, data) => {
     // error
@@ -165,7 +157,6 @@ export const register = (req, res) => {
       const q = "INSERT INTO users (`email`,`password`,`status`,`verifyCode`,`createdAt`) VALUE (?)";
       db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
-
         //create profile
         const q = "INSERT INTO profiles (`userId`,`name`,`profilePic`,`lastEdited`) VALUE (?)";
         const name = email.slice(0, email.indexOf("@"));

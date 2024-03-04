@@ -1,7 +1,10 @@
-import express from "express";
-const app = express();
 import dotenv from "dotenv";
 dotenv.config();
+
+import express from "express";
+const app = express();
+
+
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -12,7 +15,8 @@ import likeRoutes from "./routes/likes.js"
 import commentRoutes from "./routes/comments.js"
 import postRoutes from "./routes/posts.js"
 import relationshipRoutes from "./routes/relationship.js"
-import multer from "multer";
+import {uploadCloud} from "./services/uploadImage.js";
+import {uploadMulter} from "./services/uploadMulter.js";
 
 
 //middleware
@@ -21,28 +25,11 @@ app.use((req,res,next)=>{
   next();
 })
 app.use(express.json());
-app.use(
-  cors({
-    origin:"http://localhost:8088"
-    })
-);
+app.use(cors({origin:"http://localhost:8088"}));
 app.use(cookieParser())
 
-//storage
-const storage = multer.diskStorage({
-  destination:(req,file,cb)=>{
-    cb(null,"../client/public/upload");
-  },
-  filename:(req,file,cb)=>{
-    cb(null,Date.now()+file.originalname);
-  }
-})
-const upload = multer({storage:storage})
-
-app.post("/api/upload",upload.single("file"),(req,res)=>{
-  const file = req.file;
-  res.status(200).json(file.filename)
-})
+//只接收 formdata 中名爲 'image' 的欄位
+app.post("/api/upload", uploadMulter.single("image"), uploadCloud);
 
 //routes
 app.use("/api/users",userRoutes);
