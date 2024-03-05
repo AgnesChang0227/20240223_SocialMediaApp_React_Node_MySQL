@@ -2,7 +2,7 @@ import multer from "multer";
 
 export const uploadMulter = multer({
   limits: {
-    fileSize: 33554432, //4MB = 8388608 Bit
+    fileSize: 4*1024*1024, //4MB
   },
   fileFilter: (req, file, cb) =>{
     const mimetype = file.mimetype;
