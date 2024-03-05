@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, {useState} from 'react';
 import "./update.scss"
 import {makeRequest} from "../../axios";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
@@ -7,6 +7,7 @@ import ValidationForm from "../../layout/validationForm";
 import ClearIcon from '@mui/icons-material/Clear';
 import {Box, Button} from "@mui/material";
 import {useSnackbar} from "notistack";
+import {Field, Formik, useFormik} from "formik";
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Required"),
@@ -43,7 +44,6 @@ const Update = ({setOpenUpdate, user}) => {
   })
 
   const upload = async (file, type) => {
-    // console.log(file)
     try {
       const formData = new FormData();
       formData.append("image", file);//same as multer setting
@@ -53,6 +53,7 @@ const Update = ({setOpenUpdate, user}) => {
       console.log(err)
     }
   }
+
   const submitHandler = async (values) => {
     //upload images
     const coverUrl = cover ? await upload(cover, "cover") : user.coverPic;
@@ -63,6 +64,17 @@ const Update = ({setOpenUpdate, user}) => {
     setOpenUpdate(false)
   }
 
+  const checkSize = e => {
+    if (e.target.files[0].size > 4 * 1024 * 1024) {
+      //todo: set values back to last file name
+      e.target.value = null
+      enqueueSnackbar(`Only accept images < 4MB`, {variant: 'warning'})
+      return
+    }
+    e.target.name === "coverPic"
+      ? setCover(e.target.files[0])
+      : setProfile(e.target.files[0])
+  }
 
   return (
     <div className="update">
@@ -88,17 +100,18 @@ const Update = ({setOpenUpdate, user}) => {
           </div>
           <Box style={{position: "relative", bottom: "-120px"}}
                sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
-
             <div style={{width: "50%", padding: "10px"}}>
               <h4>Cover Picture</h4>
               <input type="file" name="coverPic" style={{width: "100%"}}
-                     onChange={e => setCover(e.target.files[0])}/>
+                     accept="image/jpeg, image/png"
+                     onChange={checkSize}
+              />
             </div>
-
             <div style={{width: "50%", padding: "10px"}}>
               <h4>Profile Picture</h4>
               <input type="file" name="profilePic" style={{width: "100%"}}
-                     onChange={e => setProfile(e.target.files[0])}/>
+                     accept="image/jpeg, image/png"
+                     onChange={checkSize}/>
             </div>
           </Box>
         </div>

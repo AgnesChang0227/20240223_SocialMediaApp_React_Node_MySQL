@@ -5,11 +5,13 @@ import {AuthContext} from "../../context/authContext";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import {makeRequest} from "../../axios";
 import person from "../../assets/person.png";
+import {useSnackbar} from "notistack";
 
 const Share = () => {
   const [file, setFile] = useState(null);
   const [desc, setDesc] = useState("");
   const {currentUser} = useContext(AuthContext)
+  const {enqueueSnackbar} = useSnackbar();
 
   const queryClient = useQueryClient();
 
@@ -23,12 +25,11 @@ const Share = () => {
     },
   })
 
-  const upload = async () => {
+  const upload = async (file,type) => {
     try {
-      //send object to backend
       const formData = new FormData();
-      formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
+      formData.append("image", file);
+      const res = await makeRequest.post(`/upload?type=${type}`, formData);
       return res.data
     } catch (err) {
       console.log(err)
@@ -38,13 +39,22 @@ const Share = () => {
   const handleClick = async (e) => {
     e.preventDefault();
     let imgUrl = "";
-    if (file) imgUrl = await upload();
+    if (file) imgUrl = await upload(file,"post");
     mutation.mutate({desc, img: imgUrl})
     setDesc("");
     setFile(null)
-
   }
-  console.log(file)
+
+  const checkSize = e => {
+    if (e.target.files[0].size > 4 * 1024 * 1024) {
+      //todo: set values back to last file name
+      e.target.value = null
+      enqueueSnackbar(`Only accept images < 4MB`, {variant: 'warning'})
+      return;
+    }
+    setFile(e.target.files[0]);
+  }
+
   return (
     <div className="share">
       <div className="container">
@@ -69,7 +79,7 @@ const Share = () => {
         <div className="bottom">
           <div className="left">
             <input type="file" id="file" style={{display: "none"}}
-                   onChange={e => setFile(e.target.files[0])}
+                   onChange={checkSize}
             />
             <label htmlFor="file">
               <div className="item">

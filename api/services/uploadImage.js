@@ -10,7 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-//`/upload?type=${type}&id=123`
+//`/upload?type=${type}`
 export const uploadCloud = async (req, res) => {
   //check jwt
   const token = req.cookies.accessToken;
@@ -20,7 +20,7 @@ export const uploadCloud = async (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     // set filename = public_id
-    const {type, id} = req.query;
+    const {type} = req.query;
     let filename = req.file.originalname;
     switch (type) {
       case "cover":
@@ -30,8 +30,7 @@ export const uploadCloud = async (req, res) => {
         filename = `${userInfo.id}_profilePic`
         break;
       case "post":
-        if (id) filename = `${id}_postImage`
-        else res.status(403).json("Err: post image with no id");
+        filename = `${userInfo.id}_postImage_${Date.now()}`
         break;
       default:
         res.status(403).json("Image type is not valid");
