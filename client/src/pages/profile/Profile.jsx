@@ -11,43 +11,22 @@ import {AuthContext} from "../../context/authContext";
 import Update from "../../components/update/Update";
 import person from "../../assets/person.png";
 import cover from "../../assets/defaultCover.jpg";
+import {QueryContext} from "../../context/queryContext";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const {currentUser, setCurrentUser} = useContext(AuthContext);
+  const {getUserProfile,getFollowers} = useContext(QueryContext);
   const queryClient = useQueryClient();
   const userId = parseInt(useParams().userId);
 
   //fetch target user info
   const {isPending, error, data} =
-    useQuery({
-      queryKey: ['user', userId],
-      queryFn: () =>
-        makeRequest.get("/users/find/" + userId)
-          .then(res => {
-            console.log("find" + userId)
-            //check if user's name and profilePic is not latest
-            if ((currentUser.id === userId) &&
-              (currentUser.name !== res.data.name ||
-                currentUser.profilePic !== res.data.profilePic)) {
-              setCurrentUser({
-                ...currentUser,
-                name: res.data.name,
-                profilePic: res.data.profilePic
-              })
-            }
-            return res.data
-          })
-    })
+    useQuery(getUserProfile(userId,currentUser, setCurrentUser))
 
   //fetch target user's follower
   const {isPending: rIsPending, data: relationshipData} =
-    useQuery({
-      queryKey: ['relationship'],
-      queryFn: () =>
-        makeRequest.get("/relationships?followedUserId=" + userId)
-          .then(res => res.data)
-    })
+    useQuery(getFollowers(userId))
 
 
   const mutation = useMutation({

@@ -12,7 +12,6 @@ const Share = () => {
   const [desc, setDesc] = useState("");
   const {currentUser} = useContext(AuthContext)
   const {enqueueSnackbar} = useSnackbar();
-
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
