@@ -1,25 +1,40 @@
 import "./leftBar.scss";
 import Friends from "../../assets/1.png";
-import Groups from "../../assets/2.png";
-import Market from "../../assets/3.png";
-import Watch from "../../assets/4.png";
-import Memories from "../../assets/5.png";
-import Events from "../../assets/6.png";
-import Gaming from "../../assets/7.png";
-import Gallery from "../../assets/8.png";
-import Videos from "../../assets/9.png";
-import Messages from "../../assets/10.png";
-import Tutorials from "../../assets/11.png";
-import Courses from "../../assets/12.png";
-import Fund from "../../assets/13.png";
-import { AuthContext } from "../../context/authContext";
-import { useContext } from "react";
+import LogoutIcon from '@mui/icons-material/Logout';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
+import {AuthContext} from "../../context/authContext";
+import {useContext} from "react";
 import person from "../../assets/person.png";
 import {Skeleton} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
+import {makeRequest} from "../../axios";
+import {useSnackbar} from "notistack";
 
 const LeftBar = () => {
 
-  const { currentUser } = useContext(AuthContext);
+  const {currentUser} = useContext(AuthContext);
+  const navigate = useNavigate();
+  const {enqueueSnackbar} = useSnackbar();
+
+  const logoutHandler = () => {
+    makeRequest.get("/auth/logout")
+      .then(res => {
+        localStorage.removeItem("user");
+        enqueueSnackbar("Logout! Redirect you to login page...", {variant: 'success'})
+        navigate("/login")
+      })
+      .catch(err => {
+        switch (err.code) {
+          case "ERR_NETWORK":
+          case "ERR_BAD_RESPONSE":
+            enqueueSnackbar("Something wrong on server side...", {variant: 'error'});
+            break;
+          default:
+            enqueueSnackbar(err.response.data, {variant: 'error'})
+        }
+      })
+  }
 
   return (
     <div className="leftBar">
@@ -27,37 +42,53 @@ const LeftBar = () => {
         <div className="menu">
           <div className="user">
             <img
-              src={!!!currentUser.profilePic.length?person
-                :currentUser.profilePic}
+              src={!!!currentUser.profilePic.length ? person
+                : currentUser.profilePic}
               alt=""
             />
             <span>{currentUser.name}</span>
           </div>
-          <Skeleton variant="rounded"  height={60} />
-          <Skeleton variant="rounded"  height={60} />
-          <Skeleton variant="rounded"  height={60} />
-          {/*<div className="item">*/}
-          {/*  <img src={Friends} alt="" />*/}
-          {/*  <span>Friends</span>*/}
-          {/*</div>*/}
+          {/*profile*/}
+          <Link to={`/profile/${currentUser.id}}`} style={{textDecoration: "none"}}>
+            <div className="item">
+              <PersonOutlinedIcon/>
+              <span>Profile</span>
+            </div>
+          </Link>
+          {/*friends*/}
+          <Link to="/" style={{textDecoration: "none"}}>
+            <div className="item">
+              <Diversity3Icon/>
+              <span>Friends</span>
+            </div>
+          </Link>
+          {/*logout*/}
+          <Link onClick={logoutHandler} style={{textDecoration: "none"}}>
+            <div className="item">
+              <LogoutIcon/>
+              <span>Logout</span>
+            </div>
+          </Link>
+          <Skeleton variant="rounded" height={60}/>
+          <Skeleton variant="rounded" height={60}/>
         </div>
-        <hr />
+        <hr/>
         <div className="menu">
           <span>Your shortcuts</span>
-          <Skeleton variant="rounded"  height={60} />
-          <Skeleton variant="rounded"  height={60} />
-          <Skeleton variant="rounded"  height={60} />
+          <Skeleton variant="rounded" height={60}/>
+          <Skeleton variant="rounded" height={60}/>
+          <Skeleton variant="rounded" height={60}/>
           {/*<div className="item">*/}
           {/*  <img src={Events} alt="" />*/}
           {/*  <span>Events</span>*/}
           {/*</div>*/}
         </div>
-        <hr />
+        <hr/>
         <div className="menu">
           <span>Others</span>
-          <Skeleton variant="rounded"  height={60} />
-          <Skeleton variant="rounded"  height={60} />
-          <Skeleton variant="rounded"  height={60} />
+          <Skeleton variant="rounded" height={60}/>
+          <Skeleton variant="rounded" height={60}/>
+          <Skeleton variant="rounded" height={60}/>
           {/*<div className="item">*/}
           {/*  <img src={Fund} alt="" />*/}
           {/*  <span>Fundraiser</span>*/}

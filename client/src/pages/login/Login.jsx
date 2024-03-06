@@ -30,7 +30,7 @@ const Login = () => {
   const lSH = async (values) => {
     await makeRequest.post("/auth/login", values)
       .then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         enqueueSnackbar(`Welcome back, user ${res.data.name} !`, {variant: 'success'})
         setCurrentUser(res.data)
         navigate("/");
