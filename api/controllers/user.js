@@ -4,10 +4,12 @@ import jwt from "jsonwebtoken";
 
 export const getUser = (req, res) => {
   const {userId} = req.params;
+
   const q = "SELECT * FROM profiles WHERE userId = ?"
 
   db.query(q, [userId], (err, data) => {
-    if (err) return res.status(500).join(err);
+    if (err) return res.status(500).json(err);
+    if (!!!data.length) return res.status(404).json("User not founded");
     //separate the password
     const {password, ...info} = data[0];
     return res.json(info);

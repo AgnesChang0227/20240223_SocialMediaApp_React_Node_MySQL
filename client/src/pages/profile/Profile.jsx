@@ -14,17 +14,23 @@ import cover from "../../assets/defaultCover.jpg";
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const {currentUser, setCurrentUser} = useContext(AuthContext);
+  const queryClient = useQueryClient();
+  const paramUserId = useParams().userId;
+  const [userId,setUserId] = useState(parseInt(paramUserId));
 
-  let {userId} = useParams();
-  userId = parseInt(userId);
+
+  useEffect(()=>{
+    setUserId(parseInt(paramUserId))
+  },[paramUserId])
 
   //fetch target user info
   const {isPending, error, data} =
     useQuery({
-      queryKey: ['user'],
+      queryKey: ['user',userId],
       queryFn: () =>
         makeRequest.get("/users/find/" + userId)
           .then(res => {
+            console.log("find"+userId)
             //check if user's name and profilePic is not latest
             if ((currentUser.id === userId) &&
               (currentUser.name !== res.data.name ||
@@ -39,6 +45,7 @@ const Profile = () => {
             return res.data
           })
     })
+
   //fetch target user's follower
   const {isPending: rIsPending, data: relationshipData} =
     useQuery({
@@ -48,7 +55,7 @@ const Profile = () => {
           .then(res => res.data)
     })
 
-  const queryClient = useQueryClient();
+
   const mutation = useMutation({
     mutationFn: (following) => {
       if (following) return makeRequest.delete("/relationships?userId=" + userId);

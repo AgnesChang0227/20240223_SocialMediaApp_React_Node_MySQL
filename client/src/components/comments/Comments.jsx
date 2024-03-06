@@ -5,6 +5,7 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {makeRequest} from "../../axios";
 import moment from "moment";
 import person from "../../assets/person.png"
+import {Link} from "react-router-dom";
 
 const Comments = ({postId, comments: data}) => {
   const {currentUser} = useContext(AuthContext);
@@ -39,7 +40,11 @@ const Comments = ({postId, comments: data}) => {
         <div className="comment" key={index}>
           <img src={!!!comment.profilePic.length ? person : comment.profilePic} alt=""/>
           <div className="info">
-            <span>{comment.name}</span>
+            <Link  to={`/profile/${comment.userId}`}
+                   style={{textDecoration: "none"}}
+            >
+              <span>{comment.name}</span>
+            </Link>
             <p>{comment.desc}</p>
           </div>
           <span className="date">{moment(comment.createdAt).fromNow()}</span>

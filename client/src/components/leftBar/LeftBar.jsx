@@ -49,7 +49,7 @@ const LeftBar = () => {
             <span>{currentUser.name}</span>
           </div>
           {/*profile*/}
-          <Link to={`/profile/${currentUser.id}}`} style={{textDecoration: "none"}}>
+          <Link to={`/profile/${currentUser.id}`} style={{textDecoration: "none"}}>
             <div className="item">
               <PersonOutlinedIcon/>
               <span>Profile</span>
