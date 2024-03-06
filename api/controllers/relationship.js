@@ -9,13 +9,13 @@ export const getRelationships = (req, res) => {
 
   db.query(q, [req.query.followedUserId], (err, data) => {
     if (err) return res.status(500).json(err);
-    return res.status(200).json(data.map(relationship=>relationship.followerUserId));
+    return res.status(200).json(data.map(relationship => relationship.followerUserId));
   })
 }
 
 //follow
 export const addRelationship = (req, res) => {
-  console.log(req.query.userId)
+  // console.log(req.query.userId)
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Please login first");
 
@@ -23,12 +23,12 @@ export const addRelationship = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     const q = "INSERT INTO relationships (`followerUserId`,`followedUserId`) VALUES (?)";
-    const values=[
+    const values = [
       userInfo.id,
       req.body.userId,
     ]
 
-    db.query(q,[values], (err, data) => {
+    db.query(q, [values], (err, data) => {
       console.log(err)
       if (err) return res.status(500).json(err);
       return res.status(200).json("Following");
@@ -46,7 +46,7 @@ export const deleteRelationship = (req, res) => {
 
     const q = "DELETE FROM relationships WHERE `followerUserId`=? AND `followedUserId`=?"
 
-    db.query(q, [userInfo.id,req.query.userId], (err, data) => {
+    db.query(q, [userInfo.id, req.query.userId], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json("Unfollowed");
     })
@@ -54,12 +54,18 @@ export const deleteRelationship = (req, res) => {
 }
 
 // /lastActs?num=5
-export const latestActivities =(req,res)=>{
-  const q = `SELECT followerUserId FROM relationships AS r
-             WHERE followedUserId = ?`
+export const latestActivities = (req, res) => {
+  const userId = req.query.id;
+  const q = `SELECT up.userId, up.name, up.lastEdited, p.createdAt
+             FROM relationships AS r
+                      join profiles as up on (r.followedUserId = up.userId)
+                      join posts as p on (r.followedUserId = p.userId)
+             WHERE followerUserId = ?
+             ORDER BY p.createdAt DESC
+             LIMIT 5`
 
-  db.query(q, [req.query.followedUserId], (err, data) => {
+  db.query(q, [userId], (err, data) => {
     if (err) return res.status(500).json(err);
-    return res.status(200).json(data.map(relationship=>relationship.followerUserId));
+    return res.status(200).json(data);
   })
 }

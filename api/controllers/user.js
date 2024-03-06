@@ -1,5 +1,6 @@
 import {db} from "../services/connect.js";
 import jwt from "jsonwebtoken";
+import moment from "moment";
 
 
 export const getUser = (req, res) => {
@@ -23,7 +24,7 @@ export const updateUser = (req, res) => {
   jwt.verify(token, "secretKey", (err, userInfo) => {
     if (err) return res.status(403).json("Token is not valid!");
 
-    const q = 'UPDATE profiles SET `name`=?,`desc`=?,`city`=?,`website`=?,`coverPic`=?,`profilePic`=? WHERE userId=?'
+    const q = 'UPDATE profiles SET `name`=?,`desc`=?,`city`=?,`website`=?,`coverPic`=?,`profilePic`=?,`lastEdited`=? WHERE userId=?'
     const values = [
       req.body.name,
       req.body.desc,
@@ -31,6 +32,7 @@ export const updateUser = (req, res) => {
       req.body.website,
       req.body.coverPic,
       req.body.profilePic,
+      moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
       userInfo.id
     ]
 
