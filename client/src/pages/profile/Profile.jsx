@@ -1,6 +1,7 @@
 import "./profile.scss";
 import PlaceIcon from "@mui/icons-material/Place";
 import LanguageIcon from "@mui/icons-material/Language";
+import GroupIcon from '@mui/icons-material/Group';
 import Posts from "../../components/posts/Posts"
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {makeRequest} from "../../axios";
@@ -15,13 +16,7 @@ const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const {currentUser, setCurrentUser} = useContext(AuthContext);
   const queryClient = useQueryClient();
-  const paramUserId = useParams().userId;
-  const [userId,setUserId] = useState(parseInt(paramUserId));
-
-
-  useEffect(()=>{
-    setUserId(parseInt(paramUserId))
-  },[paramUserId])
+  const userId = parseInt(useParams().userId);
 
   //fetch target user info
   const {isPending, error, data} =
@@ -94,23 +89,8 @@ const Profile = () => {
           </div>
           <div className="profileContainer">
             <div className="uInfo">
-              <div className="left">
-                {/*<a href="http://facebook.com">*/}
-                {/*  <FacebookTwoToneIcon fontSize="large"/>*/}
-                {/*</a>*/}
-                {/*<a href="http://facebook.com">*/}
-                {/*  <InstagramIcon fontSize="large"/>*/}
-                {/*</a>*/}
-                {/*<a href="http://facebook.com">*/}
-                {/*  <TwitterIcon fontSize="large"/>*/}
-                {/*</a>*/}
-                {/*<a href="http://facebook.com">*/}
-                {/*  <LinkedInIcon fontSize="large"/>*/}
-                {/*</a>*/}
-                {/*<a href="http://facebook.com">*/}
-                {/*  <PinterestIcon fontSize="large"/>*/}
-                {/*</a>*/}
-              </div>
+              {/*<div className="left">*/}
+              {/*</div>*/}
               <div className="center">
                 <span>{data.name}</span>
                 <div className="info">
@@ -122,7 +102,12 @@ const Profile = () => {
                     <LanguageIcon/>
                     <span>{data.website}</span>
                   </div>
+                  <div className="item">
+                    <GroupIcon/>
+                    <span>follows: {relationshipData.length}</span>
+                  </div>
                 </div>
+                <div>{data.desc}</div>
                 {currentUser.id === userId ?
                   <button onClick={() => setOpenUpdate(true)}>
                     Update
@@ -137,10 +122,10 @@ const Profile = () => {
                   </button>
                 }
               </div>
-              <div className="right">
-                {/*<EmailOutlinedIcon/>*/}
-                {/*<MoreVertIcon/>*/}
-              </div>
+              {/*<div className="right">*/}
+              {/*  /!*<EmailOutlinedIcon/>*!/*/}
+              {/*  /!*<MoreVertIcon/>*!/*/}
+              {/*</div>*/}
             </div>
             <Posts userId={userId}/>
           </div>

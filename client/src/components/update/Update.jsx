@@ -58,15 +58,13 @@ const Update = ({setOpenUpdate, user}) => {
     //upload images
     const coverUrl = cover ? await upload(cover, "cover") : user.coverPic;
     const profileUrl = profile ? await upload(profile, "profile") : user.profilePic;
-
-    //update user
-    mutation.mutate({...values, coverPic: coverUrl, profilePic: profileUrl});
+    const {description,...others}  = values
+    mutation.mutate({...others,desc:description, coverPic: coverUrl, profilePic: profileUrl});
     setOpenUpdate(false)
   }
 
   const checkSize = e => {
     if (e.target.files[0].size > 4 * 1024 * 1024) {
-      //todo: set values back to last file name
       e.target.value = null
       enqueueSnackbar(`Only accept images < 4MB`, {variant: 'warning'})
       return

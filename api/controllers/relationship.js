@@ -1,6 +1,7 @@
 import {db} from "../services/connect.js";
 import jwt from "jsonwebtoken";
 
+//get followers
 export const getRelationships = (req, res) => {
   const q = `SELECT followerUserId
              FROM relationships
@@ -12,6 +13,7 @@ export const getRelationships = (req, res) => {
   })
 }
 
+//follow
 export const addRelationship = (req, res) => {
   console.log(req.query.userId)
   const token = req.cookies.accessToken;
@@ -34,6 +36,7 @@ export const addRelationship = (req, res) => {
   })
 }
 
+//unfollow
 export const deleteRelationship = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Please login first");
