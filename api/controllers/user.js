@@ -15,6 +15,7 @@ export const getUser = (req, res) => {
     return res.json(info);
   })
 }
+
 export const updateUser = (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) return res.status(401).json("Please login first");

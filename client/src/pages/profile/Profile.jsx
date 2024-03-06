@@ -21,16 +21,15 @@ const Profile = () => {
   //fetch target user info
   const {isPending, error, data} =
     useQuery({
-      queryKey: ['user',userId],
+      queryKey: ['user', userId],
       queryFn: () =>
         makeRequest.get("/users/find/" + userId)
           .then(res => {
-            console.log("find"+userId)
+            console.log("find" + userId)
             //check if user's name and profilePic is not latest
             if ((currentUser.id === userId) &&
               (currentUser.name !== res.data.name ||
-                currentUser.profilePic !== res.data.profilePic))
-            {
+                currentUser.profilePic !== res.data.profilePic)) {
               setCurrentUser({
                 ...currentUser,
                 name: res.data.name,
@@ -104,39 +103,39 @@ const Profile = () => {
                   </div>
                   <div className="item">
                     <GroupIcon/>
-                    <span>follows: {relationshipData.length}</span>
-                  </div>
-                </div>
-                <div>{data.desc}</div>
-                {currentUser.id === userId ?
-                  <button onClick={() => setOpenUpdate(true)}>
-                    Update
-                  </button>
-                  :
-                  <button onClick={handleFollow}>
+                    <span>follows: {rIsPending ? "Loading" : relationshipData.length}</span>
+                      </div>
+                      </div>
+                      <div>{data.desc}</div>
+                    {currentUser.id === userId ?
+                      <button onClick={() => setOpenUpdate(true)}>
+                      Update
+                      </button>
+                      :
+                      <button onClick={handleFollow}>
                     {rIsPending ?
                       "Loading" :
                       relationshipData.includes(currentUser.id)
-                        ? "Following"
-                        : "Follow"}
-                  </button>
-                }
-              </div>
-              {/*<div className="right">*/}
-              {/*  /!*<EmailOutlinedIcon/>*!/*/}
-              {/*  /!*<MoreVertIcon/>*!/*/}
-              {/*</div>*/}
-            </div>
-            <Posts userId={userId}/>
-          </div>
-        </>
-      }
-      {openUpdate &&
-        <Update setOpenUpdate={setOpenUpdate} user={data}/>
-      }
+                      ? "Following"
+                      : "Follow"}
+                      </button>
+                    }
+                      </div>
+                    {/*<div className="right">*/}
+                    {/*  /!*<EmailOutlinedIcon/>*!/*/}
+                    {/*  /!*<MoreVertIcon/>*!/*/}
+                    {/*</div>*/}
+                      </div>
+                      <Posts userId={userId}/>
+                      </div>
+                      </>
+                    }
+                      {openUpdate &&
+                        <Update setOpenUpdate={setOpenUpdate} user={data}/>
+                      }
 
-    </div>
-  )
-};
+                  </div>
+                  )
+                  };
 
-export default Profile;
+                  export default Profile;

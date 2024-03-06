@@ -10,29 +10,21 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {makeRequest} from "../../axios";
 import {AuthContext} from "../../context/authContext";
 import person from "../../assets/person.png";
+import {QueryContext} from "../../context/queryContext";
 
 const Post = ({post}) => {
   const {currentUser} = useContext(AuthContext);
+  const {getPostLikes,getPostComments} = useContext(QueryContext);
   const queryClient = useQueryClient();
   const [commentOpen, setCommentOpen] = useState(false);
 
   //fetch data: likes,comments
   //likes
-  const {isPending, error, data} =
-    useQuery({
-      queryKey: ['likes', post.id],
-      queryFn: () =>
-        makeRequest.get("/likes?postId=" + post.id)
-          .then(res => res.data)
-    })
+  const {isPending, error, data} = useQuery(getPostLikes(post.id)) ;
   //comments
   const {isPending:commentPending, error:commentErr, data:commentData} =
-    useQuery({
-      queryKey: ['comments', post.id],
-      queryFn: () =>
-        makeRequest.get("/comments?postId=" + post.id)
-          .then(res => res.data)
-    })
+    useQuery(getPostComments(post.id))
+
 
   //like
   const mutation = useMutation({
