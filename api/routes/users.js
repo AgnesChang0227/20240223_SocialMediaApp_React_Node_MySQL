@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/find/:userId",getUser)
 router.put("/",updateUser)
-router.get("/suggestion",suggestedUsers)
+router.get("/suggestion/:userId",suggestedUsers)
 
 export default router;
 

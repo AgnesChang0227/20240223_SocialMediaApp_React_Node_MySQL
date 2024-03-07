@@ -46,10 +46,12 @@ export const updateUser = (req, res) => {
 }
 
 export const suggestedUsers = (req, res) => {
-
-  const com = `SELECT userId, name, profilePic, followerCount, NULL AS followedUserId
+  let {userId} = req.params;
+  userId=parseInt(userId)
+  const com = `SELECT userId, name, profilePic,followerCount,NULL AS followedUserId
 #               5 users that have most followers
-               FROM (SELECT followedUserId, COUNT(followerUserId) AS followerCount
+               FROM (
+               SELECT followedUserId, COUNT(followerUserId) AS followerCount
                      FROM relationships AS r
                      WHERE followedUserId != ?
                      GROUP BY followedUserId
@@ -66,12 +68,12 @@ export const suggestedUsers = (req, res) => {
                                               WHERE followerUserId = ?)
                        AND followedUserId != ?
                      LIMIT 5) AS u2
-                        JOIN profiles AS p ON u2.followedUserId = p.userId;`
-  db.query(com, [35,35,35], (err, data) => {
+                        JOIN profiles AS p ON u2.followedUserId = p.userId;
+`
+  db.query(com,[userId,userId,userId], (err, data) => {
     if (err) return res.status(500).json(err);
     if (!!!data.length) return res.status(404).json("User not founded");
-    //separate the password
-    const {password, ...info} = data[0];
-    return res.json(info);
+
+    return res.json(data);
   })
 }

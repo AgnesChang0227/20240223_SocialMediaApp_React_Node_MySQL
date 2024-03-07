@@ -10,7 +10,8 @@ export const QueryContextProvider = ({children}) => {
     getUserProfile,//user
     getFollowers,//relationship
     getPosts,//posts
-    getLatestActs,//latestActs
+    getLatestActs,//latestActs,
+    getSuggestions,//suggestions
   }
   return (
     <QueryContext.Provider value={values}>
@@ -91,4 +92,17 @@ const getLatestActs = (userId,num)=>{
         })
 
   }
+}
+
+const getSuggestions = (currentUserId)=>{
+  return {
+    queryKey:["suggestions",currentUserId],
+    queryFn:()=>
+      makeRequest.get(`/users/suggestion/${currentUserId}`)
+        .then(r=>r.data)
+        .catch(err=>{
+          console.log(err);
+        })
+  }
+
 }
