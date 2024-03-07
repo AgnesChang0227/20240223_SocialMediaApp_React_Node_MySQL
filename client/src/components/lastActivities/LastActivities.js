@@ -6,38 +6,6 @@ import {AuthContext} from "../../context/authContext";
 import {useQuery} from "@tanstack/react-query";
 import {QueryContext} from "../../context/queryContext";
 
-// const data = [
-//   {
-//     userId: "1",
-//     name: "test2",
-//     profilePic: "https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//     createdAt: [2007, 0, 29],
-//   },
-//   {
-//     userId: "1",
-//     name: "test2",
-//     profilePic: "https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//     lastEdited: [2007, 0, 29],
-//   },
-//   {
-//     userId: "1",
-//     name: "test2",
-//     profilePic: "https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//     lastEdited: [2007, 0, 29],
-//   },
-//   {
-//     userId: "1",
-//     name: "test2",
-//     profilePic: "https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//     lastEdited: [2007, 0, 29],
-//   },
-//   {
-//     userId: "1",
-//     name: "test2",
-//     profilePic: "https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600",
-//     createdAt: [2007, 0, 29],
-//   },
-// ]
 const LastActivities = () => {
   const {currentUser} = useContext(AuthContext);
   const {getLatestActs} = useContext(QueryContext)

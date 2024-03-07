@@ -56,16 +56,18 @@ export const deleteRelationship = (req, res) => {
 // /lastActs?userId?=&num=5
 export const latestActivities = (req, res) => {
   //id = currentUser id; num = limited results num
-  const {id,num} = req.query;
+  const {id, num} = req.query;
   const q = `SELECT *
-             FROM (SELECT up.userId, name, profilePic, null as lastEdited ,createdAt
+#                   posts with username, profilePic
+             FROM (SELECT up.userId, name, profilePic, null as lastEdited, createdAt
                    FROM profiles as up
                             JOIN posts as P ON (p.userId = up.userId)
                    WHERE up.userId IN (SELECT followedUserId
                                        FROM relationships
                                        WHERE followerUserId = ?)
                    UNION
-                   SELECT userId, name, profilePic, lastEdited,null as createdAt
+#                    profile
+                   SELECT userId, name, profilePic, lastEdited, null as createdAt
                    FROM profiles
                    WHERE userId IN (SELECT followedUserId
                                     FROM relationships
@@ -74,7 +76,7 @@ export const latestActivities = (req, res) => {
              LIMIT ?
   `
 
-  db.query(q, [id, id,parseInt(num)], (err, data) => {
+  db.query(q, [id, id, parseInt(num)], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data);
   })

@@ -6,7 +6,7 @@ import ValidationForm from "../../layout/validationForm";
 import * as yup from "yup";
 import {useSnackbar} from "notistack";
 import {useState} from "react";
-import VerifyEmail from "../../components/verifyEmail";
+import VerifyEmail from "../../components/VerifyEmail";
 
 //validationSchema
 const rVS = yup.object().shape({

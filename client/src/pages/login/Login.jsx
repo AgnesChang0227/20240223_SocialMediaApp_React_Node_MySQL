@@ -7,8 +7,8 @@ import {makeRequest} from "../../axios";
 import {useSnackbar} from "notistack";
 
 import "./login.scss"
-import VerifyEmail from "../../components/verifyEmail";
-import ChangePassword from "../../components/changePassword";
+import VerifyEmail from "../../components/VerifyEmail";
+import ChangePassword from "../../components/ChangePassword";
 
 //validationSchema
 const lVS = yup.object().shape({

@@ -1,17 +1,20 @@
+
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {makeRequest} from "../../axios";
+import {useParams} from "react-router-dom";
+import {useContext,useState} from "react";
+
+import {QueryContext} from "../../context/queryContext";
+import {AuthContext} from "../../context/authContext";
+import Posts from "../../components/posts/Posts"
+import Update from "../../components/update/Update";
+
 import "./profile.scss";
 import PlaceIcon from "@mui/icons-material/Place";
 import LanguageIcon from "@mui/icons-material/Language";
 import GroupIcon from '@mui/icons-material/Group';
-import Posts from "../../components/posts/Posts"
-import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
-import {makeRequest} from "../../axios";
-import {useLocation, useParams} from "react-router-dom";
-import {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../../context/authContext";
-import Update from "../../components/update/Update";
 import person from "../../assets/person.png";
 import cover from "../../assets/defaultCover.jpg";
-import {QueryContext} from "../../context/queryContext";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);

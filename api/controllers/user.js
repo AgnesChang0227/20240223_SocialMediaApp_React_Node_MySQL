@@ -38,9 +38,57 @@ export const updateUser = (req, res) => {
 
     db.query(q, values, (err, data) => {
       if (err) return res.status(500).json(err);
-      if (data.affectedRows>0) return res.json("Updated");
+      if (data.affectedRows > 0) return res.json("Updated");
       return res.status(403).json("You can only update your profile")
     })
   })
 
+}
+
+export const suggestedUsers = (req, res) => {
+
+  const com = `SELECT userId, name, profilePic, followerCount, NULL AS followedUserId
+#               5 users that have most followers
+               FROM (SELECT followedUserId, COUNT(followerUserId) AS followerCount
+                     FROM relationships AS r
+                     WHERE followedUserId != ?
+                     GROUP BY followedUserId
+                     ORDER BY followerCount DESC
+                     LIMIT 5) AS u
+                        JOIN profiles AS p ON (u.followedUserId = p.userId)
+               UNION ALL
+#                user's followed user's followed
+               SELECT userId, name, profilePic, NULL AS followerCount, followedUserId
+               FROM (SELECT followedUserId, followerUserId
+                     FROM relationships AS r
+                     WHERE followerUserId IN (SELECT followedUserId
+                                              FROM relationships
+                                              WHERE followerUserId = ?)
+                       AND followedUserId != ?
+                     LIMIT 5) AS u2
+                        JOIN profiles AS p ON u2.followedUserId = p.userId;`
+  // const q = `SELECT userId, name, profilePic, NULL AS followerUserId, followerCount
+  //            FROM (SELECT followedUserId, COUNT(followerUserId) AS followerCount
+  //                  FROM relationships AS r
+  //                  GROUP BY followedUserId
+  //                  ORDER BY followerCount DESC
+  //                  LIMIT 5) AS topUsers
+  //                     JOIN profiles AS p ON (topUsers.followedUserId = p.userId)
+  // `
+  // const query = `SELECT userId, name, profilePic, followerUserId, NULL AS followerCount
+  //                FROM (SELECT followedUserId, followerUserId
+  //                      FROM relationships
+  //                      WHERE followerUserId IN (SELECT followedUserId
+  //                                               FROM relationships
+  //                                               WHERE followerUserId = ?)
+  //                        AND followedUserId != ?) AS followUsers
+  //                         JOIN profiles AS p ON (followUsers.followedUserId = p.userId)
+  // `
+  db.query(com, [35,35,35], (err, data) => {
+    if (err) return res.status(500).json(err);
+    if (!!!data.length) return res.status(404).json("User not founded");
+    //separate the password
+    const {password, ...info} = data[0];
+    return res.json(info);
+  })
 }

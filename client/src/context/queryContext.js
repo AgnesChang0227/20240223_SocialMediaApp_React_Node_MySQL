@@ -1,5 +1,4 @@
 import {createContext} from "react";
-import {useQuery} from "@tanstack/react-query";
 import {makeRequest} from "../axios";
 
 export const QueryContext = createContext();
@@ -45,7 +44,6 @@ const getUserProfile=(userId,currentUser,setCurrentUser)=>{
     queryFn: () =>
       makeRequest.get("/users/find/" + userId)
         .then(res => {
-          console.log("find" + userId)
           //check if user's name and profilePic is not latest
           if ((currentUser.id === userId) &&
             (currentUser.name !== res.data.name ||
