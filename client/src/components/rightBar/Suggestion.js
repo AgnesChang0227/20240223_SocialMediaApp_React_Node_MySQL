@@ -2,6 +2,8 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useQuery} from "@tanstack/react-query";
 import {QueryContext} from "../../context/queryContext";
 import {AuthContext} from "../../context/authContext";
+import {Link} from "react-router-dom";
+import "./rightBar.scss"
 
 const Suggestion = () => {
   const {currentUser} = useContext(AuthContext);
@@ -32,7 +34,11 @@ const Suggestion = () => {
                   src={sug.profilePic}
                   alt=""
                 />
-                <span>{sug.name}</span>
+                <span>
+                  <Link to={`/profile/${sug.userId}`} className={"link"} style={{textDecoration:"none"}}>
+                    {sug.name}
+                  </Link>
+                </span>
               </div>
 
               <div className="buttons">

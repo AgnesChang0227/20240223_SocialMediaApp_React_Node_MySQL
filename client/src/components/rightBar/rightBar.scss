@@ -1,5 +1,11 @@
 @import "../../style.scss";
 
+.link{
+  @include themify($themes) {
+    color: themed(textColor);
+  }
+}
+
 .rightBar {
   @include themify($themes) {
     flex: 3;

@@ -72,28 +72,28 @@ const LeftBar = () => {
           <Skeleton variant="rounded" height={60}/>
           <Skeleton variant="rounded" height={60}/>
         </div>
-        <hr/>
-        <div className="menu">
-          <span>Your shortcuts</span>
-          <Skeleton variant="rounded" height={60}/>
-          <Skeleton variant="rounded" height={60}/>
-          <Skeleton variant="rounded" height={60}/>
-          {/*<div className="item">*/}
-          {/*  <img src={Events} alt="" />*/}
-          {/*  <span>Events</span>*/}
-          {/*</div>*/}
-        </div>
-        <hr/>
-        <div className="menu">
-          <span>Others</span>
-          <Skeleton variant="rounded" height={60}/>
-          <Skeleton variant="rounded" height={60}/>
-          <Skeleton variant="rounded" height={60}/>
-          {/*<div className="item">*/}
-          {/*  <img src={Fund} alt="" />*/}
-          {/*  <span>Fundraiser</span>*/}
-          {/*</div>*/}
-        </div>
+        {/*<hr/>*/}
+        {/*<div className="menu">*/}
+        {/*  <span>Your shortcuts</span>*/}
+        {/*  <Skeleton variant="rounded" height={60}/>*/}
+        {/*  <Skeleton variant="rounded" height={60}/>*/}
+        {/*  <Skeleton variant="rounded" height={60}/>*/}
+        {/*  /!*<div className="item">*!/*/}
+        {/*  /!*  <img src={Events} alt="" />*!/*/}
+        {/*  /!*  <span>Events</span>*!/*/}
+        {/*  /!*</div>*!/*/}
+        {/*</div>*/}
+        {/*<hr/>*/}
+        {/*<div className="menu">*/}
+        {/*  <span>Others</span>*/}
+        {/*  <Skeleton variant="rounded" height={60}/>*/}
+        {/*  <Skeleton variant="rounded" height={60}/>*/}
+        {/*  <Skeleton variant="rounded" height={60}/>*/}
+        {/*  /!*<div className="item">*!/*/}
+        {/*  /!*  <img src={Fund} alt="" />*!/*/}
+        {/*  /!*  <span>Fundraiser</span>*!/*/}
+        {/*  /!*</div>*!/*/}
+        {/*</div>*/}
       </div>
     </div>
   );

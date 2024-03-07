@@ -54,10 +54,10 @@ const Navbar = () => {
           <DarkModeOutlinedIcon onClick={toggle} style={{cursor: "pointer"}}/>
         )}
         {/*<GridViewOutlinedIcon />*/}
-        <div className="search">
-          <SearchOutlinedIcon/>
-          <input type="text" placeholder="Search..."/>
-        </div>
+        {/*<div className="search">*/}
+        {/*  <SearchOutlinedIcon/>*/}
+        {/*  <input type="text" placeholder="Search..."/>*/}
+        {/*</div>*/}
       </div>
       <div className="right">
         {/*btn for logout*/}
