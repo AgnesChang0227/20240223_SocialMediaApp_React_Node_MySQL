@@ -120,7 +120,7 @@ const genCLRData =  new Promise( (resolve) => {
       //relationship
       let q = `INSERT INTO relationships (followerUserId, followedUserId) VALUE ?`
       //followed users id
-      let randomUsers = usersData;
+      let randomUsers = usersData.slice(0,usersData.length-1);
       randomUsers.splice(i, 1);
       randomUsers = randomArr(randomUsers);
       let values = randomUsers.map(user => [targetUserId, user.id]);
