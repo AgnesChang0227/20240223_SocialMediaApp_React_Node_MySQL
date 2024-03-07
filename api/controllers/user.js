@@ -67,23 +67,6 @@ export const suggestedUsers = (req, res) => {
                        AND followedUserId != ?
                      LIMIT 5) AS u2
                         JOIN profiles AS p ON u2.followedUserId = p.userId;`
-  // const q = `SELECT userId, name, profilePic, NULL AS followerUserId, followerCount
-  //            FROM (SELECT followedUserId, COUNT(followerUserId) AS followerCount
-  //                  FROM relationships AS r
-  //                  GROUP BY followedUserId
-  //                  ORDER BY followerCount DESC
-  //                  LIMIT 5) AS topUsers
-  //                     JOIN profiles AS p ON (topUsers.followedUserId = p.userId)
-  // `
-  // const query = `SELECT userId, name, profilePic, followerUserId, NULL AS followerCount
-  //                FROM (SELECT followedUserId, followerUserId
-  //                      FROM relationships
-  //                      WHERE followerUserId IN (SELECT followedUserId
-  //                                               FROM relationships
-  //                                               WHERE followerUserId = ?)
-  //                        AND followedUserId != ?) AS followUsers
-  //                         JOIN profiles AS p ON (followUsers.followedUserId = p.userId)
-  // `
   db.query(com, [35,35,35], (err, data) => {
     if (err) return res.status(500).json(err);
     if (!!!data.length) return res.status(404).json("User not founded");
