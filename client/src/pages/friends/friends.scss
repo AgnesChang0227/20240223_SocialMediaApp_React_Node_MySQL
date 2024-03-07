@@ -1,0 +1,39 @@
+@import "../../style.scss";
+
+.friends {
+  @include themify($themes) {
+    background-color: themed("bgSoft");
+    min-height: 100vh;
+    padding: 30px 30px 40px 40px;
+
+    h3{
+      color: themed(textColor);
+      padding-bottom: 20px;
+    }
+    .card {
+      //width: 70%;
+      margin: auto auto 30px;
+      background-color: themed("bg");
+      color: themed(textColor);
+      border: 1px solid themed("border");
+
+      .title{
+        color: themed("textColor");
+      }
+      button {
+        border: none;
+        background-color: #5271ff;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+    }
+    .card:hover {
+      box-shadow: -moz-default-background-color;
+      //border-color: neutral.outlinedHoverBorder;
+    }
+
+  }
+}
+

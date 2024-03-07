@@ -1,8 +1,7 @@
-
 import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {makeRequest} from "../../axios";
 import {useParams} from "react-router-dom";
-import {useContext,useState} from "react";
+import {useContext, useState} from "react";
 
 import {QueryContext} from "../../context/queryContext";
 import {AuthContext} from "../../context/authContext";
@@ -19,13 +18,13 @@ import cover from "../../assets/defaultCover.jpg";
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const {currentUser, setCurrentUser} = useContext(AuthContext);
-  const {getUserProfile,getFollowers} = useContext(QueryContext);
+  const {getUserProfile, getFollowers} = useContext(QueryContext);
   const queryClient = useQueryClient();
   const userId = parseInt(useParams().userId);
 
   //fetch target user info
   const {isPending, error, data} =
-    useQuery(getUserProfile(userId,currentUser, setCurrentUser))
+    useQuery(getUserProfile(userId, currentUser, setCurrentUser))
 
   //fetch target user's follower
   const {isPending: rIsPending, data: relationshipData} =
@@ -86,38 +85,34 @@ const Profile = () => {
                   <div className="item">
                     <GroupIcon/>
                     <span>follows: {rIsPending ? "Loading" : relationshipData.length}</span>
-                      </div>
-                      </div>
-                      <div>{data.desc}</div>
-                    {currentUser.id === userId ?
-                      <button onClick={() => setOpenUpdate(true)}>
-                      Update
-                      </button>
-                      :
-                      <button onClick={handleFollow}>
+                  </div>
+                </div>
+                <div>{data.desc}</div>
+                {currentUser.id === userId ?
+                  <button onClick={() => setOpenUpdate(true)}>
+                    Update
+                  </button>
+                  :
+                  <button onClick={handleFollow}>
                     {rIsPending ?
                       "Loading" :
                       relationshipData.includes(currentUser.id)
-                      ? "Following"
-                      : "Follow"}
-                      </button>
-                    }
-                      </div>
-                    {/*<div className="right">*/}
-                    {/*  /!*<EmailOutlinedIcon/>*!/*/}
-                    {/*  /!*<MoreVertIcon/>*!/*/}
-                    {/*</div>*/}
-                      </div>
-                      <Posts userId={userId}/>
-                      </div>
-                      </>
-                    }
-                      {openUpdate &&
-                        <Update setOpenUpdate={setOpenUpdate} user={data}/>
-                      }
+                        ? "Following"
+                        : "Follow"}
+                  </button>
+                }
+              </div>
+            </div>
+            <Posts userId={userId}/>
+          </div>
+        </>
+      }
+      {openUpdate &&
+        <Update setOpenUpdate={setOpenUpdate} user={data}/>
+      }
 
-                  </div>
-                  )
-                  };
+    </div>
+  )
+};
 
-                  export default Profile;
+export default Profile;

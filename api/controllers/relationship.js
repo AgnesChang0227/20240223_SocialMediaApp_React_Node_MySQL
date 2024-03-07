@@ -85,15 +85,15 @@ export const latestActivities = (req, res) => {
 export const getFriends = (req, res) => {
   const {userId} = req.params;
   //check follower and followed
-  const q = `SELECT p.userId,name,profilePic
+  const q = `SELECT p.userId, name, profilePic, city, website
              FROM (SELECT rA.followedUserId
                    FROM relationships AS rA
                             JOIN relationships AS rB
                                  ON rA.followedUserId = rB.followerUserId
                                      AND rA.followerUserId = rB.followedUserId
-                   WHERE rA.followerUserId = ?) AS friend
+                   WHERE rB.followedUserId = ?) AS friend
                       JOIN profiles AS p ON friend.followedUserId = p.userId`
-  db.query(q,[userId],(err,data)=>{
+  db.query(q, [userId], (err, data) => {
     if (err) return res.status(500).json(err);
     return res.status(200).json(data)
   })

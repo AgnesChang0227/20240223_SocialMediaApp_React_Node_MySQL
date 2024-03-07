@@ -22,7 +22,7 @@ const Suggestion = () => {
   return (
     isPending ? "Loading"
       :
-      <div>
+      <div className="item">
         <span>Suggestions For You</span>
         {showArr.slice(0,3).map((sug,index) => (
           <div key={index}>

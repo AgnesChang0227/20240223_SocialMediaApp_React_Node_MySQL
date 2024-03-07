@@ -12,6 +12,7 @@ export const QueryContextProvider = ({children}) => {
     getPosts,//posts
     getLatestActs,//latestActs,
     getSuggestions,//suggestions
+    getFriends,//friends
   }
   return (
     <QueryContext.Provider value={values}>
@@ -19,6 +20,14 @@ export const QueryContextProvider = ({children}) => {
     </QueryContext.Provider>
   );
 };
+const getFriends = (currentUserId)=>{
+  return{
+    queryKey: ['friends', currentUserId],
+    queryFn: () =>
+      makeRequest.get("/relationships/friends/" + currentUserId)
+        .then(res => res.data)
+  }
+}
 
 // likes
 const getPostLikes = (postId) => {

@@ -56,7 +56,7 @@ const LeftBar = () => {
             </div>
           </Link>
           {/*friends*/}
-          <Link to="/" style={{textDecoration: "none"}}>
+          <Link to="/friends" style={{textDecoration: "none"}}>
             <div className="item">
               <Diversity3Icon/>
               <span>Friends</span>

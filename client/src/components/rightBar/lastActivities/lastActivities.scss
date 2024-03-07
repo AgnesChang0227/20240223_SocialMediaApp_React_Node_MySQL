@@ -1,4 +1,4 @@
-@import "../../style.scss";
+@import "src/style";
 
 .act {
   @include themify($themes) {
