@@ -1,6 +1,7 @@
 import "./messenger.css"
 import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
+import ChatOnline from "../../components/chatOnline/ChatOnline";
 
 const Messenger = () => {
   return (
@@ -19,8 +20,6 @@ const Messenger = () => {
             <Message/>
             <Message/>
             <Message/>
-            <Message/>
-            <Message/>
             <Message own={true}/>
             <Message/>
           </div>
@@ -32,6 +31,9 @@ const Messenger = () => {
       </div>
       <div className="chatOnline">
         <div className="chatOnlineWrapper">online</div>
+        <ChatOnline/>
+        <ChatOnline/>
+        <ChatOnline/>
       </div>
     </div>
   );
