@@ -1,14 +1,20 @@
-import "./messenger.css"
+import "./messenger.scss"
 import Conversation from "../../components/conversations/Conversation";
 import Message from "../../components/message/Message";
 import ChatOnline from "../../components/chatOnline/ChatOnline";
 
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+
 const Messenger = () => {
+
   return (
-    <div className="messenger">
+    <div className={`messenger`}>
       <div className="chatMenu">
         <div className="chatMenuWrapper">
-          <input placeholder="Search for friends" className={"chatMenuInput"}/>
+          <div className="search">
+            <SearchOutlinedIcon/>
+            <input type="text" placeholder="Search..."/>
+          </div>
           <Conversation/>
           <Conversation/>
           <Conversation/>

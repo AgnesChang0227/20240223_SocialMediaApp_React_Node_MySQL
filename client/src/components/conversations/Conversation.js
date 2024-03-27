@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import "./conversation.css"
+import "./conversation.scss"
 import {AuthContext} from "../../context/authContext";
 
 const Conversation = () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import "./chatOnline.css"
+import "./chatOnline.scss"
 
 const ChatOnline = () => {
   return (

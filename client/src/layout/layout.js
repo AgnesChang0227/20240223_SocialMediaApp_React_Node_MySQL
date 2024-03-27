@@ -29,13 +29,13 @@ const Layout = () => {
         <div className={`theme-${darkMode ? "dark" : "light"}`}>
           <Navbar/>
           <div style={{display: "flex"}}>
-            {!pathname==="/messenger"&&(
+            {pathname!=="/messenger"&&(
               <LeftBar/>
             )}
             <div style={{flex: 7}}>
               <Outlet/>
             </div>
-            {!pathname==="/messenger"&&(
+            {pathname!=="/messenger"&&(
               <RightBar/>
             )}
 

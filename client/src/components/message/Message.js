@@ -1,5 +1,5 @@
 import React from 'react';
-import "./message.css"
+import "./message.scss"
 
 const Message = ({own}) => {
   return (

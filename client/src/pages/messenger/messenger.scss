@@ -1,0 +1,87 @@
+
+@import "../../style.scss";
+.messenger{
+    @include themify($themes) {
+        display: flex;
+        //margin-top: 10px;
+        background-color: themed("bg");
+        color: themed("textColor");
+        height: 95vh;
+        .chatMenu {
+            flex: 3.5;
+        }
+        .chatMenuWrapper{
+            //height: 100%;
+        }
+        .search {
+            width: 90%;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid themed("border");
+            border-radius: 5px;
+            padding: 5px;
+
+            input {
+                width: 100%;
+                border: none;
+                background-color: transparent;
+                color: themed("textColor");
+
+            }
+        }
+
+        .chatBox {
+            flex: 5.5;
+        }
+        .chatBoxWrapper {
+            height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .chatBoxTop {
+            height: 100%;
+            overflow-y: scroll;
+            //overflow: hidden;
+            padding-right: 10px;
+        }
+        .chatBoxTop::-webkit-scrollbar {
+            display: none;
+        }
+        .chatBoxBottom {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chatMessageInput {
+            width: 80%;
+            height: 90px;
+            padding: 10px;
+            background-color: transparent;
+            color: themed("textColor");
+        }
+        .chatSubmitButton {
+            width: 70px;
+            height: 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: themed("bgSoft");
+            color: themed("textColor");
+        }
+        .chatOnline {
+            flex: 3;
+        }
+
+        .chatMenuWrapper,
+        .chatMenuWrapper,
+        .chatMenuWrapper {
+            padding: 10px;
+            height: 100%;
+        }
+    }
+}
+
