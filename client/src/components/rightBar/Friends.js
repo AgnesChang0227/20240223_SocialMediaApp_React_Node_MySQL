@@ -15,8 +15,8 @@ const Friends = () => {
 
       <div className="item">
         <span>Friends</span>
-        {data.slice(0, 5).map(friend => (
-          <div className="user">
+        {data.slice(0, 5).map((friend,index) => (
+          <div className="user" key={`${friend.id}_${index}`}>
             <div className="userInfo">
               <img src={friend.profilePic} alt=""/>
               {/*<div className="online" />*/}

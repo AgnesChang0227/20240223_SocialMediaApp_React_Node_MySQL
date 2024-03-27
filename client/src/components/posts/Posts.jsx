@@ -14,7 +14,7 @@ const Posts = ({userId}) => {
       error.response.data :
       isPending ?
         "loading" :
-        data.map(post => <Post post={post} key={post.id}/>)
+        data.map((post,index) => <Post post={post} key={`${index}_${post.id}`}/>)
     }
   </div>;
 };

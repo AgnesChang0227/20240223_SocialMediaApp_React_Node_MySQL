@@ -17,7 +17,7 @@ export default function Friends() {
       <h3>Friends: {!!data&&data.length}</h3>
       {isPending?"loading":
         data.map((user,index)=>(
-          <div key={index}>
+          <div key={index} >
             <Friend user={user} />
           </div>
         ))

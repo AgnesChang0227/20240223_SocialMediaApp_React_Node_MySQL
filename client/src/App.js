@@ -5,20 +5,23 @@ import {routes} from "./routes";
 
 import "./style.scss"
 import {QueryContextProvider} from "./context/queryContext";
+import {SocketContextProvider} from "./context/socketContext";
 
 
 function App() {
   const router = useRoutes(routes);
 
   return (
-    <QueryContextProvider>
-      <SnackbarProvider
-        preventDuplicate={true}
-        anchorOrigin={{ horizontal:"right", vertical: "bottom" }}
-      >
-        {router}
-      </SnackbarProvider>
-    </QueryContextProvider>
+    <SocketContextProvider>
+      <QueryContextProvider>
+        <SnackbarProvider
+          preventDuplicate={true}
+          anchorOrigin={{ horizontal:"right", vertical: "bottom" }}
+        >
+          {router}
+        </SnackbarProvider>
+      </QueryContextProvider>
+    </SocketContextProvider>
   );
 }
 
