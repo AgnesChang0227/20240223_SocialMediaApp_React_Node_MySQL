@@ -125,7 +125,7 @@ export const changePassword = (req, res) => {
   })
 }
 
-//give: {email,password,code}
+//give: {email,password}
 export const register = (req, res) => {
   const {email, password} = req.body;
   const q = "SELECT * FROM users WHERE email = ?";

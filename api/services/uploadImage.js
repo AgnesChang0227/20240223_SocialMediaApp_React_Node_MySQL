@@ -10,6 +10,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+
 //`/upload?type=${type}`
 export const uploadCloud = async (req, res) => {
   //check jwt
@@ -48,8 +49,9 @@ export const uploadCloud = async (req, res) => {
       public_id: filename
     };
     cloudinary.uploader.upload(dataURI, options)
-      .then(data=> res.status(200).json(data.url))
+      .then(data => res.status(200).json(data.url))
       .catch(err => res.status(500).json(err))
   })
 
 }
+

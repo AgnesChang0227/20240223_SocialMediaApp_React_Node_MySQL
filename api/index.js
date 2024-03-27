@@ -2,12 +2,10 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from "express";
-const app = express();
-
+import {app,server} from "./services/socket.js";
 
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
 //import routes
 import userRoutes from "./routes/users.js"
 import authRoutes from "./routes/auth.js"
@@ -17,7 +15,6 @@ import postRoutes from "./routes/posts.js"
 import relationshipRoutes from "./routes/relationship.js"
 import {uploadCloud} from "./services/uploadImage.js";
 import {uploadMulter} from "./services/uploadMulter.js";
-
 
 //middleware
 app.use((req,res,next)=>{
@@ -42,6 +39,6 @@ app.use("/api/relationships",relationshipRoutes);
 
 //port
 const port = 8080;
-app.listen(port,()=>{
+server.listen(port,()=>{
   console.log(`API working on ${port}`)
 })
